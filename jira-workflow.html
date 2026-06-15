@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How We Work in Jira — Strata (ST) Board</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Display: Bricolage Grotesque · Mono/labels: JetBrains Mono -->
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   THEME TOKENS — "Strategy → Execution Blueprint" (dark)
+   Color semantics mirror the content itself:
+   strategy = blue, execution = amber, epic = violet, bead = green
+   ============================================================ */
+:root{
+  --bg:#070b16;
+  --panel:rgba(255,255,255,.035);
+  --line:rgba(255,255,255,.14);
+  --text:#eef2fb;
+  --muted:#8492af;
+  --strat:#5b8def;   /* User Story / strategy */
+  --exec:#e0a35e;    /* Task / execution */
+  --epic:#b07ce0;    /* Epic */
+  --bead:#3cc279;    /* Sub-task / Bead */
+  --epic-t:#d3b6f0; --strat-t:#a9c4ff; --exec-t:#f2cf9b; --bead-t:#92e6b6;
+  --font-display:'Bricolage Grotesque',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+  --stage-bg:#04060d;
+  --ease:cubic-bezier(.16,1,.3,1);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+
+/* ===========================================
+   FIXED 16:9 STAGE: MANDATORY BASE STYLES (verbatim)
+   =========================================== */
+html,body{width:100%;height:100%;margin:0;overflow:hidden;background:var(--stage-bg,#000);}
+.deck-viewport{position:fixed;inset:0;overflow:hidden;background:var(--stage-bg,#000);}
+.deck-stage{position:absolute;left:0;top:0;width:1920px;height:1080px;overflow:hidden;transform-origin:0 0;background:var(--slide-bg,#fff);}
+.slide{position:absolute;inset:0;width:1920px;height:1080px;overflow:hidden;display:block;visibility:hidden;opacity:0;pointer-events:none;background:var(--slide-bg,#fff);}
+.slide.active,.slide.visible{visibility:visible;opacity:1;pointer-events:auto;z-index:1;}
+img,video,canvas,svg{max-width:100%;max-height:100%;}
+.deck-controls{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:1000;}
+@media print{
+  html,body{width:1920px;height:auto;overflow:visible;background:#fff;}
+  .deck-viewport{position:static;overflow:visible;background:#fff;}
+  .deck-stage{position:static;width:auto;height:auto;transform:none !important;background:none;}
+  .slide{position:relative;display:block !important;visibility:visible !important;opacity:1 !important;pointer-events:auto !important;width:1920px;height:1080px;break-after:page;page-break-after:always;}
+  .slide:last-child{break-after:auto;page-break-after:auto;}
+  .deck-controls{display:none !important;}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms !important;transition-duration:.2s !important;}}
+
+/* ===========================================
+   SLIDE CANVAS + ATMOSPHERE
+   =========================================== */
+.slide{
+  background:
+    radial-gradient(120% 90% at 10% -5%,rgba(91,141,239,.18),transparent 52%),
+    radial-gradient(120% 95% at 95% 108%,rgba(224,163,94,.15),transparent 52%),
+    var(--bg);
+  font-family:var(--font-mono);color:var(--text);
+}
+/* faint blueprint grid behind everything */
+.slide::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background-image:linear-gradient(rgba(120,150,210,.05) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(120,150,210,.05) 1px,transparent 1px);
+  background-size:60px 60px;
+  mask-image:linear-gradient(180deg,transparent,#000 22%,#000 84%,transparent);
+}
+.pad{position:absolute;top:84px;left:130px;right:130px;bottom:84px;}
+
+/* shared chrome ---------------------------------------------- */
+.chrome-top{display:flex;justify-content:space-between;align-items:center;
+  font-size:18px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);}
+.chrome-top .dot{display:inline-block;width:10px;height:10px;border-radius:50%;
+  background:var(--exec);margin-right:12px;box-shadow:0 0 14px var(--exec);vertical-align:middle;}
+.eyebrow{font-family:var(--font-mono);font-size:20px;letter-spacing:.28em;text-transform:uppercase;color:var(--strat-t);}
+.eyebrow.x-exec{color:var(--exec-t);}.eyebrow.x-epic{color:var(--epic-t);}.eyebrow.x-bead{color:var(--bead-t);}
+h2{font-family:var(--font-display);font-weight:800;font-size:88px;line-height:.96;letter-spacing:-.02em;margin-top:18px;}
+.lead{font-size:30px;line-height:1.5;color:var(--muted);max-width:1180px;margin-top:26px;}
+.lead b{color:var(--text);font-weight:500;}
+
+/* TITLE slide ------------------------------------------------ */
+.title h1{font-family:var(--font-display);font-weight:800;font-size:158px;line-height:.9;letter-spacing:-.025em;margin-top:64px;}
+.title h1 .g{background:linear-gradient(100deg,var(--strat),var(--exec));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.title .lead{font-size:32px;color:var(--muted);max-width:1080px;}
+.title .lead b{color:var(--text);}
+.ladder{position:absolute;right:130px;top:150px;width:440px;display:flex;flex-direction:column;gap:18px;}
+.step{border:1.5px solid var(--line);border-left-width:5px;border-radius:10px;padding:18px 22px;background:var(--panel);backdrop-filter:blur(4px);}
+.step .n{font-size:15px;color:var(--muted);letter-spacing:.2em;}
+.step .t{font-family:var(--font-display);font-weight:700;font-size:27px;margin-top:4px;}
+.step .m{font-size:15px;color:var(--muted);margin-top:2px;}
+.s-epic{border-left-color:var(--epic)}.s-epic .t{color:var(--epic-t)}
+.s-strat{border-left-color:var(--strat)}.s-strat .t{color:var(--strat-t)}
+.s-exec{border-left-color:var(--exec)}.s-exec .t{color:var(--exec-t)}
+.s-bead{border-left-color:var(--bead)}.s-bead .t{color:var(--bead-t)}
+.title .golden{position:absolute;left:130px;bottom:96px;font-size:19px;letter-spacing:.08em;color:var(--muted);}
+.title .golden b{color:var(--exec);font-weight:500;}
+
+/* generic level cards (TL;DR) -------------------------------- */
+.cards4{display:grid;grid-template-columns:repeat(4,1fr);gap:26px;margin-top:60px;}
+.card{border:1.5px solid var(--line);border-top-width:5px;border-radius:14px;padding:34px 30px;background:var(--panel);min-height:520px;display:flex;flex-direction:column;}
+.card .lvno{font-family:var(--font-display);font-weight:800;font-size:64px;line-height:1;}
+.card .lvname{font-family:var(--font-display);font-weight:700;font-size:38px;margin-top:14px;}
+.card .lvwhat{font-size:21px;line-height:1.45;color:var(--muted);margin-top:18px;flex:1;}
+.card .meta{font-size:16px;letter-spacing:.04em;color:var(--muted);border-top:1px solid var(--line);padding-top:16px;margin-top:18px;}
+.card .meta b{color:var(--text);font-weight:500;}
+.card .mirror{font-size:16px;margin-top:10px;font-weight:500;}
+.c-epic{border-top-color:var(--epic)}.c-epic .lvno{color:var(--epic-t)}
+.c-strat{border-top-color:var(--strat)}.c-strat .lvno{color:var(--strat-t)}
+.c-exec{border-top-color:var(--exec)}.c-exec .lvno{color:var(--exec-t)}.c-exec .mirror{color:var(--exec-t)}
+.c-bead{border-top-color:var(--bead)}.c-bead .lvno{color:var(--bead-t)}.c-bead .mirror{color:var(--bead-t)}
+
+/* two-zone slide --------------------------------------------- */
+.zones{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:54px;}
+.zone{border:1.5px solid var(--line);border-radius:16px;padding:46px;background:var(--panel);}
+.zone.z-strat{border-color:rgba(91,141,239,.5);box-shadow:inset 0 0 80px rgba(91,141,239,.08);}
+.zone.z-exec{border-color:rgba(224,163,94,.5);box-shadow:inset 0 0 80px rgba(224,163,94,.08);}
+.zone .zh{font-family:var(--font-display);font-weight:800;font-size:46px;}
+.z-strat .zh{color:var(--strat-t)}.z-exec .zh{color:var(--exec-t)}
+.zone .zk{font-size:18px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+.zone .zd{font-size:23px;line-height:1.5;color:var(--muted);margin-top:18px;}
+.zone .zrow{display:flex;gap:14px;margin-top:30px;}
+.tagpill{font-size:17px;padding:10px 18px;border-radius:999px;border:1.5px solid var(--line);}
+.z-strat .tagpill{border-color:rgba(91,141,239,.55);color:var(--strat-t)}
+.z-exec .tagpill{border-color:rgba(224,163,94,.55);color:var(--exec-t)}
+
+/* level detail slide (left rail + right facts) --------------- */
+.detail{display:grid;grid-template-columns:1.25fr 1fr;gap:64px;margin-top:46px;align-items:start;}
+.facts{display:flex;flex-direction:column;gap:22px;}
+.fact{display:flex;gap:20px;align-items:flex-start;}
+.fact .ic{font-size:26px;line-height:1.2;flex:0 0 auto;width:40px;text-align:center;}
+.fact .fx{font-size:23px;line-height:1.45;color:var(--muted);}
+.fact .fx b{color:var(--text);font-weight:500;}
+.sidecard{border:1.5px solid var(--line);border-radius:14px;padding:34px;background:var(--panel);}
+.sidecard.x-strat{border-color:rgba(91,141,239,.4)}
+.sidecard.x-exec{border-color:rgba(224,163,94,.4)}
+.sidecard.x-epic{border-color:rgba(176,124,224,.4)}
+.sidecard.x-bead{border-color:rgba(60,194,121,.4)}
+.sidecard .sh{font-size:16px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);}
+.sidecard .ex{font-family:var(--font-display);font-size:25px;line-height:1.4;margin-top:14px;color:var(--text);}
+.sidecard .ex span{display:block;margin-top:12px;color:var(--muted);font-size:21px;font-family:var(--font-mono);}
+.mental{margin-top:34px;font-size:22px;line-height:1.5;border-left:4px solid var(--exec);padding-left:22px;color:var(--muted);}
+.mental b{color:var(--text);font-weight:500;}
+.eqbadge{display:inline-flex;align-items:center;gap:12px;font-family:var(--font-display);font-weight:700;font-size:30px;margin-top:8px;}
+.eqbadge .arrow{color:var(--muted);font-weight:400;}
+
+/* flow slide (release pipeline) ------------------------------ */
+.flow{display:flex;align-items:stretch;gap:0;margin-top:70px;}
+.fnode{flex:1;border:1.5px solid var(--line);border-radius:14px;padding:28px 22px;background:var(--panel);text-align:center;position:relative;}
+.fnode .fn{font-family:var(--font-display);font-weight:800;font-size:34px;}
+.fnode .fl{font-size:17px;color:var(--muted);margin-top:10px;line-height:1.4;}
+.fnode.prod{border-color:rgba(60,194,121,.6);}.fnode.prod .fn{color:var(--bead-t)}
+.fnode.branch{border-color:rgba(224,163,94,.6);}.fnode.branch .fn{color:var(--exec-t)}
+.fnode.qa{border-color:rgba(214,90,90,.6);}.fnode.qa .fn{color:#f0a3a3}
+.farrow{display:flex;align-items:center;color:var(--muted);font-size:34px;padding:0 18px;}
+.release-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:30px 50px;margin-top:64px;}
+.rstep{display:flex;gap:20px;align-items:flex-start;}
+.rstep .rn{font-family:var(--font-display);font-weight:800;font-size:40px;color:var(--strat-t);flex:0 0 auto;}
+.rstep .rt{font-size:21px;line-height:1.45;color:var(--muted);}
+.rstep .rt b{color:var(--text);font-weight:500;}
+
+/* roles table ------------------------------------------------ */
+.rtable{margin-top:46px;border:1.5px solid var(--line);border-radius:14px;overflow:hidden;}
+.rrow{display:grid;grid-template-columns:1.1fr 1fr 2fr;gap:0;}
+.rrow>div{padding:22px 30px;border-bottom:1px solid var(--line);font-size:21px;}
+.rrow:last-child>div{border-bottom:none;}
+.rhead>div{background:rgba(255,255,255,.05);font-size:16px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);}
+.rrow .role{font-family:var(--font-display);font-weight:700;font-size:22px;}
+.rrow .owns{color:var(--strat-t);}
+.rrow .resp{color:var(--muted);}
+
+/* mirror discipline slide ------------------------------------ */
+.mirror2{display:grid;grid-template-columns:1fr 1fr;gap:54px;margin-top:50px;}
+.mcol h3{font-family:var(--font-display);font-weight:700;font-size:32px;margin-bottom:24px;}
+.mcol.do h3{color:var(--bead-t)}.mcol.why h3{color:var(--exec-t)}
+.mlist{display:flex;flex-direction:column;gap:20px;}
+.mitem{display:flex;gap:16px;font-size:22px;line-height:1.45;color:var(--muted);}
+.mitem .mk{color:var(--bead-t);font-weight:700;}
+.why .mitem .mk{color:var(--exec-t);}
+.mitem b{color:var(--text);font-weight:500;}
+.owncall{margin-top:42px;border:1.5px solid rgba(224,163,94,.5);border-radius:12px;padding:26px 32px;font-size:24px;background:rgba(224,163,94,.06);}
+.owncall b{color:var(--exec-t);}
+
+/* worked example tree ---------------------------------------- */
+.tree{margin-top:40px;font-family:var(--font-mono);}
+.tnode{display:flex;align-items:baseline;gap:16px;padding:9px 0;font-size:23px;}
+.tnode .id{font-weight:700;}
+.tnode .ds{color:var(--muted);}
+.t-epic{margin-left:0;}.t-epic .id{color:var(--epic-t);font-family:var(--font-display);font-weight:800;font-size:27px;}
+.t-us{margin-left:54px;}.t-us .id{color:var(--strat-t);font-weight:700;}
+.t-task{margin-left:120px;}.t-task .id{color:var(--exec-t);font-weight:700;}
+.t-sub{margin-left:196px;font-size:20px;}.t-sub .id{color:var(--bead-t);}
+.tbranch{color:var(--line);}
+.exnote{position:absolute;right:130px;bottom:96px;width:430px;border:1.5px solid var(--line);border-radius:12px;padding:24px;background:var(--panel);font-size:18px;line-height:1.5;color:var(--muted);}
+.exnote b{color:var(--text);font-weight:500;}
+
+/* quick reference -------------------------------------------- */
+.qref{margin-top:46px;display:grid;grid-template-columns:1fr 1fr;gap:24px 60px;}
+.qitem{border-bottom:1px solid var(--line);padding-bottom:18px;}
+.qitem .q{font-size:20px;color:var(--muted);}
+.qitem .a{font-family:var(--font-display);font-weight:600;font-size:25px;margin-top:8px;}
+.qitem .a b{color:var(--exec-t);}
+
+/* closing ---------------------------------------------------- */
+.closing{display:flex;flex-direction:column;justify-content:center;height:100%;}
+.closing h2{font-size:120px;}
+.closing .g{background:linear-gradient(100deg,var(--strat),var(--exec));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.closing .lead{font-size:30px;margin-top:30px;}
+.closing .links{margin-top:48px;display:flex;gap:18px;}
+.linkpill{font-size:19px;padding:14px 26px;border-radius:999px;border:1.5px solid var(--line);color:var(--text);text-decoration:none;}
+.linkpill:hover{border-color:var(--strat);}
+
+.foot{position:absolute;left:130px;bottom:40px;font-size:15px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);}
+
+/* ===========================================
+   REVEAL ANIMATIONS (trigger on .slide.visible)
+   =========================================== */
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .7s var(--ease),transform .7s var(--ease);}
+.slide.visible .reveal{opacity:1;transform:none;}
+.reveal.rl{transform:translateX(-44px);}
+.reveal.rr{transform:translateX(44px);}
+.slide.visible .reveal.rl,.slide.visible .reveal.rr{transform:none;}
+.slide.visible .d1{transition-delay:.08s}.slide.visible .d2{transition-delay:.2s}
+.slide.visible .d3{transition-delay:.32s}.slide.visible .d4{transition-delay:.44s}
+.slide.visible .d5{transition-delay:.56s}.slide.visible .d6{transition-delay:.68s}
+.slide.visible .d7{transition-delay:.8s}.slide.visible .d8{transition-delay:.92s}
+
+/* ===========================================
+   DECK CHROME (outside the stage)
+   =========================================== */
+.deck-controls{display:flex;align-items:center;gap:16px;font-family:var(--font-mono);
+  color:var(--muted);font-size:14px;letter-spacing:.12em;background:rgba(7,11,22,.7);
+  border:1px solid var(--line);border-radius:999px;padding:8px 18px;backdrop-filter:blur(8px);}
+.deck-controls button,.deck-controls a{background:none;border:none;color:var(--text);font-size:18px;cursor:pointer;line-height:1;padding:2px 6px;text-decoration:none;}
+.deck-controls button:hover,.deck-controls a:hover{color:var(--strat);}
+.deck-controls a#homeBtn{border-right:1px solid var(--line);padding-right:12px;margin-right:2px;font-size:19px;}
+.progress{position:fixed;left:0;top:0;height:3px;background:linear-gradient(90deg,var(--strat),var(--exec));z-index:1001;transition:width .4s var(--ease);}
+/* inline edit affordance */
+.edit-hotzone{position:fixed;top:0;left:0;width:80px;height:80px;z-index:10000;cursor:pointer;}
+.edit-toggle{position:fixed;top:18px;left:18px;opacity:0;pointer-events:none;transition:opacity .3s ease;z-index:10001;
+  background:rgba(7,11,22,.8);border:1px solid var(--line);color:var(--text);border-radius:10px;font-size:18px;padding:8px 12px;cursor:pointer;}
+.edit-toggle.show,.edit-toggle.active{opacity:1;pointer-events:auto;}
+.edit-toggle.active{border-color:var(--exec);color:var(--exec-t);}
+body.editing [contenteditable]{outline:1px dashed rgba(224,163,94,.6);outline-offset:4px;border-radius:3px;}
+.edit-hint{position:fixed;top:18px;left:70px;font-family:var(--font-mono);font-size:13px;color:var(--muted);opacity:0;transition:opacity .3s;z-index:10001;}
+.edit-hint.show{opacity:1;}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="deck-viewport">
+<main class="deck-stage" id="deckStage">
+
+  <!-- ============ SLIDE 1 — TITLE ============ -->
+  <section class="slide title active">
+    <div class="pad">
+      <div class="chrome-top reveal d1"><span><span class="dot"></span>Strata ST — Board #3108</span><span>Engineering Walkthrough · 01 / 14</span></div>
+      <h1 class="reveal d2">How We Work<br>in <span class="g">Jira</span></h1>
+      <p class="lead reveal d3">Two strategic levels, two tactical levels. <b>Strategy flows down into execution</b> — and Jira stays mirrored with Initech &amp; Beadbox.</p>
+      <div class="golden reveal d4"><b>Golden rule —</b> a User Story is what ships. Tasks &amp; sub-tasks travel with it, never released on their own.</div>
+      <div class="ladder">
+        <div class="step s-epic reveal rr d4"><div class="n">01 · STRATEGY</div><div class="t">Epic</div><div class="m">Business + Architecture + SMEs</div></div>
+        <div class="step s-strat reveal rr d5"><div class="n">02 · STRATEGY</div><div class="t">User Story</div><div class="m">The release unit · branch &lt;US-ID&gt;</div></div>
+        <div class="step s-exec reveal rr d6"><div class="n">03 · EXECUTION</div><div class="t">Task → Initech Epic</div><div class="m">Engineering Lead</div></div>
+        <div class="step s-bead reveal rr d7"><div class="n">04 · EXECUTION</div><div class="t">Sub-task → Bead</div><div class="m">Developer</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 2 — TL;DR FOUR LEVELS ============ -->
+  <section class="slide">
+    <div class="pad">
+      <div class="eyebrow reveal d1">TL;DR</div>
+      <h2 class="reveal d2">Four levels, one line of sight</h2>
+      <div class="cards4">
+        <div class="card c-epic reveal d2"><div class="lvno">01</div><div class="lvname">Epic</div><div class="lvwhat">A strategic initiative spanning many features and releases.</div><div class="meta">Owned by<br><b>Business + Architecture + SMEs</b></div></div>
+        <div class="card c-strat reveal d3"><div class="lvno">02</div><div class="lvname">User Story</div><div class="lvwhat">A versionable feature — the unit of release.</div><div class="meta">Owned by<br><b>Product + Architecture</b></div></div>
+        <div class="card c-exec reveal d4"><div class="lvno">03</div><div class="lvname">Task</div><div class="lvwhat">An implementation unit: backend, frontend, devops, research…</div><div class="meta">Owned by<br><b>Engineering</b></div><div class="mirror">= Initech Epic (Beadbox)</div></div>
+        <div class="card c-bead reveal d5"><div class="lvno">04</div><div class="lvname">Sub-task</div><div class="lvwhat">The atomic work item — the smallest tracked unit.</div><div class="meta">Owned by<br><b>Developer</b></div><div class="mirror">= Bead (Beadbox)</div></div>
+      </div>
+    </div>
+    <div class="foot">The first two levels are strategic · the last two are tactical</div>
+  </section>
+
+  <!-- ============ SLIDE 3 — TWO ZONES ============ -->
+  <section class="slide">
+    <div class="pad">
+      <div class="eyebrow reveal d1">The big picture</div>
+      <h2 class="reveal d2">Strategy decides, execution delivers</h2>
+      <div class="zones">
+        <div class="zone z-strat reveal rl d2">
+          <div class="zk">Levels 1–2</div>
+          <div class="zh">🧠 Strategy</div>
+          <div class="zd">The <b>why</b> and the <b>what</b>. Big bets and the versioned features that ship them. Defined in business &amp; architecture grooming.</div>
+          <div class="zrow"><span class="tagpill">Epic</span><span class="tagpill">User Story</span></div>
+        </div>
+        <div class="zone z-exec reveal rr d3">
+          <div class="zk">Levels 3–4</div>
+          <div class="zh">⚙️ Execution</div>
+          <div class="zd">The <b>how</b> and the <b>step</b>. Implementation work that mirrors exactly what developers do locally in Initech / Beadbox.</div>
+          <div class="zrow"><span class="tagpill">Task = Initech Epic</span><span class="tagpill">Sub-task = Bead</span></div>
+        </div>
+      </div>
+      <p class="lead reveal d4">A <b>User Story</b> is the hinge between the two zones — strategy hands it down, execution builds it up.</p>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 4 — EPIC ============ -->
+  <section class="slide">
+    <div class="pad">
+      <div class="eyebrow x-epic reveal d1">Level 1 · Strategy</div>
+      <h2 class="reveal d2">Epic — the strategic initiative</h2>
+      <div class="detail">
+        <div class="facts">
+          <div class="fact reveal d2"><span class="ic">✅</span><span class="fx"><b>What it is.</b> A large capability the Strata program wants to deliver — broad on purpose, spanning many features and releases.</span></div>
+          <div class="fact reveal d3"><span class="ic">👥</span><span class="fx"><b>Who owns it.</b> Business, Architecture, and the SMEs — defined and refined in business / architecture grooming.</span></div>
+          <div class="fact reveal d4"><span class="ic">🔗</span><span class="fx"><b>How it connects.</b> Contains many User Stories. It is <b>not</b> tied to a release — Epics stay open for months while their stories ship one by one.</span></div>
+          <div class="mental reveal d5">Mental model — <b>“What strategic capability are we building?”</b></div>
+        </div>
+        <div class="sidecard x-epic reveal rr d3">
+          <div class="sh">Examples</div>
+          <div class="ex">Multi-currency support across the platform<span>End-to-end document automation (OCR → classification → export)</span><span>Self-service tenant onboarding</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="foot">Epic · owned by Business + Architecture + SMEs</div>
+  </section>
+
+  <!-- ============ SLIDE 5 — USER STORY ============ -->
+  <section class="slide">
+    <div class="pad">
+      <div class="eyebrow reveal d1">Level 2 · Strategy</div>
+      <h2 class="reveal d2">User Story — the versionable feature</h2>
+      <div class="detail">
+        <div class="facts">
+          <div class="fact reveal d2"><span class="ic">📦</span><span class="fx"><b>The release unit.</b> A release ships one or more User Stories — never partial Tasks.</span></div>
+          <div class="fact reveal d3"><span class="ic">👥</span><span class="fx"><b>Who owns it.</b> Product (scope, acceptance) and Architecture (technical coherence). Engineering is consulted, not the owner.</span></div>
+          <div class="fact reveal d4"><span class="ic">🔗</span><span class="fx"><b>How it connects.</b> One Epic → several Stories. One Story → several Tasks.</span></div>
+          <div class="mental reveal d5">Mental model — <b>“Which slice of the Epic ships next?”</b></div>
+        </div>
+        <div class="sidecard x-strat reveal rr d3">
+          <div class="sh">🌿 Branching rule (mandatory)</div>
+          <div class="ex">Create a dedicated branch from <b>production</b>, named with the User Story ID.<span style="color:var(--strat-t);font-family:var(--font-mono);font-size:24px;margin-top:18px;">branch name = &lt;US-ID&gt;</span><span>e.g. <b style="color:var(--text)">ST-1234</b> — all Tasks of that Story merge into this branch; the branch is what gets promoted.</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="foot">User Story · owned by Product + Architecture · the release unit</div>
+  </section>
+
+  <!-- ============ SLIDE 6 — TASK ============ -->
+  <section class="slide">
+    <div class="pad">
+      <div class="eyebrow x-exec reveal d1">Level 3 · Execution</div>
+      <h2 class="reveal d2">Task — the implementation unit</h2>
+      <div class="detail">
+        <div class="facts">
+          <div class="fact reveal d2"><span class="ic">✅</span><span class="fx"><b>What it is.</b> A piece of implementation work for a Story. One Story normally has several Tasks across disciplines: backend, frontend, devops, research, spike, data, infra, QA.</span></div>
+          <div class="fact reveal d3"><span class="ic">👥</span><span class="fx"><b>Who owns it.</b> The Engineering Lead decomposes the Story into Tasks; the developer / squad picks them up.</span></div>
+          <div class="fact reveal d4"><span class="ic">👯</span><span class="fx"><b>Release behavior.</b> Tasks never ship alone. If a Task misses the cutoff, the whole Story typically slips.</span></div>
+          <div class="mental reveal d5">Mental model — <b>“What does engineering have to build to deliver this feature?”</b></div>
+        </div>
+        <div class="sidecard x-exec reveal rr d3">
+          <div class="sh">🔗 Maps to Beadbox</div>
+          <div class="eqbadge" style="color:var(--exec-t)">Jira Task <span class="arrow">=</span> Initech Epic</div>
+          <div class="ex"><span>Pick up a Task → create the matching Initech Epic in Beadbox → decompose it locally into Beads.</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="foot">Task · owned by Engineering · = Initech Epic in Beadbox</div>
+  </section>
+
+  <!-- ============ SLIDE 7 — SUB-TASK ============ -->
+  <section class="slide">
+    <div class="pad">
+      <div class="eyebrow x-bead reveal d1">Level 4 · Execution</div>
+      <h2 class="reveal d2">Sub-task — the atomic work item</h2>
+      <div class="detail">
+        <div class="facts">
+          <div class="fact reveal d2"><span class="ic">✅</span><span class="fx"><b>What it is.</b> The smallest tracked unit — a commit-sized change, a test, a config update, a small refactor, or a focused investigation.</span></div>
+          <div class="fact reveal d3"><span class="ic">👥</span><span class="fx"><b>Who owns it.</b> The developer actively working the Task.</span></div>
+          <div class="fact reveal d4"><span class="ic">🔗</span><span class="fx"><b>How it connects.</b> One Task → several Sub-tasks. A Sub-task ships implicitly when its parent Task ships.</span></div>
+          <div class="mental reveal d5">Mental model — <b>“Which concrete step am I working on right now?”</b></div>
+        </div>
+        <div class="sidecard x-bead reveal rr d3">
+          <div class="sh">🔗 Maps to Beadbox</div>
+          <div class="eqbadge" style="color:var(--bead-t)">Jira Sub-task <span class="arrow">=</span> Bead</div>
+          <div class="ex"><span>For every Bead worked locally, there is a matching Sub-task in Jira. The two are a <b style="color:var(--text)">1:1 mirror</b>.</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="foot">Sub-task · owned by Developer · = Bead in Beadbox</div>
+  </section>
+
+  <!-- ============ SLIDE 8 — THE MIRROR (concept) ============ -->
+  <section class="slide">
+    <div class="pad">
+      <div class="eyebrow x-exec reveal d1">Jira ↔ Beadbox</div>
+      <h2 class="reveal d2">Execution levels mirror your local stack</h2>
+      <div class="zones" style="margin-top:64px;">
+        <div class="zone z-exec reveal rl d2">
+          <div class="zk">Level 3</div>
+          <div class="zh">Task ⟷ Initech Epic</div>
+          <div class="zd">The Jira Task is the contract; the Initech Epic is where you actually break it down and work it.</div>
+        </div>
+        <div class="zone z-exec reveal rr d3" style="border-color:rgba(60,194,121,.5);box-shadow:inset 0 0 80px rgba(60,194,121,.08);">
+          <div class="zk">Level 4</div>
+          <div class="zh" style="color:var(--bead-t)">Sub-task ⟷ Bead</div>
+          <div class="zd">Each Bead you ship has a twin Sub-task in Jira. Move one, move the other.</div>
+        </div>
+      </div>
+      <p class="lead reveal d4"><b>Why it matters —</b> Jira is the long-term source of truth and the shared line of sight for Product, Architecture and Leadership. Beadbox is the local execution lens.</p>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 9 — BRANCH & RELEASE FLOW ============ -->
+  <section class="slide">
+    <div class="pad">
+      <div class="eyebrow reveal d1">Lifecycle</div>
+      <h2 class="reveal d2">From production, back to production</h2>
+      <div class="flow">
+        <div class="fnode prod reveal d2"><div class="fn">production</div><div class="fl">the baseline</div></div>
+        <div class="farrow reveal d2">→</div>
+        <div class="fnode branch reveal d3"><div class="fn">branch &lt;US-ID&gt;</div><div class="fl">e.g. ST-1234</div></div>
+        <div class="farrow reveal d3">→</div>
+        <div class="fnode reveal d4"><div class="fn" style="color:var(--exec-t)">Task PRs</div><div class="fl">backend · frontend · devops merge in</div></div>
+        <div class="farrow reveal d4">→</div>
+        <div class="fnode qa reveal d5"><div class="fn">QA</div><div class="fl">validate the Story end-to-end</div></div>
+        <div class="farrow reveal d5">→</div>
+        <div class="fnode prod reveal d6"><div class="fn">release 🚀</div><div class="fl">promote to production</div></div>
+      </div>
+      <div class="release-steps">
+        <div class="rstep reveal d3"><span class="rn">1</span><span class="rt">Product &amp; Architecture pick the <b>User Stories</b> for the next release.</span></div>
+        <div class="rstep reveal d4"><span class="rn">2</span><span class="rt">Each Story gets a branch off <b>production</b> named after its ID.</span></div>
+        <div class="rstep reveal d5"><span class="rn">3</span><span class="rt">All <b>Tasks</b> merge their PRs into the Story branch.</span></div>
+        <div class="rstep reveal d6"><span class="rn">4</span><span class="rt">QA validates the Story branch <b>end-to-end</b>.</span></div>
+        <div class="rstep reveal d7"><span class="rn">5</span><span class="rt">Once green, the branch is <b>promoted</b> to production.</span></div>
+        <div class="rstep reveal d8"><span class="rn">6</span><span class="rt">Sub-tasks ride with Tasks; Tasks ride with the Story.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 10 — RESPONSIBILITIES ============ -->
+  <section class="slide">
+    <div class="pad">
+      <div class="eyebrow reveal d1">Who owns what</div>
+      <h2 class="reveal d2">Responsibilities cheat-sheet</h2>
+      <div class="rtable reveal d2">
+        <div class="rrow rhead"><div>Role</div><div>Owns</div><div>Day-to-day responsibility</div></div>
+        <div class="rrow"><div class="role">Business + SMEs</div><div class="owns">Epics</div><div class="resp">Validate strategic value, set scope, sign off</div></div>
+        <div class="rrow"><div class="role">Architecture</div><div class="owns">Epics + Stories</div><div class="resp">System coherence, cross-cutting concerns, technical guardrails</div></div>
+        <div class="rrow"><div class="role">Product</div><div class="owns">User Stories</div><div class="resp">Scope, acceptance criteria, release planning</div></div>
+        <div class="rrow"><div class="role">Engineering Lead</div><div class="owns">Tasks</div><div class="resp">Decompose Stories into Tasks, assign by discipline</div></div>
+        <div class="rrow"><div class="role">Developer</div><div class="owns">Sub-tasks / Beads</div><div class="resp">Execute work, keep the Jira ↔ Beadbox mirror alive</div></div>
+        <div class="rrow"><div class="role">DevOps</div><div class="owns">DevOps Tasks</div><div class="resp">Infra, deployment, environment configuration</div></div>
+        <div class="rrow"><div class="role">QA</div><div class="owns">QA Tasks</div><div class="resp">Test plans, automation, acceptance validation</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 11 — MIRROR DISCIPLINE ============ -->
+  <section class="slide">
+    <div class="pad">
+      <div class="eyebrow x-exec reveal d1">🪬 Non-negotiable</div>
+      <h2 class="reveal d2">The mirror discipline</h2>
+      <div class="mirror2">
+        <div class="mcol do">
+          <h3 class="reveal d2">✅ What developers must do</h3>
+          <div class="mlist">
+            <div class="mitem reveal d3"><span class="mk">→</span><span>Bead moves to <b>In Progress</b> → transition the matching Sub-task in Jira.</span></div>
+            <div class="mitem reveal d4"><span class="mk">→</span><span>Bead closed → close the Sub-task with a short summary comment.</span></div>
+            <div class="mitem reveal d5"><span class="mk">→</span><span>Initech Epic done → summary comment on the Jira Task with PR links &amp; key decisions.</span></div>
+            <div class="mitem reveal d6"><span class="mk">→</span><span>Blockers, scope changes &amp; dependencies surface as comments on the Jira side.</span></div>
+          </div>
+        </div>
+        <div class="mcol why">
+          <h3 class="reveal d3">🚧 Why it matters</h3>
+          <div class="mlist">
+            <div class="mitem reveal d4"><span class="mk">→</span><span>Product &amp; Architecture never have to ask <b>“what’s the status?”</b> — Jira is the answer.</span></div>
+            <div class="mitem reveal d5"><span class="mk">→</span><span>Release planning depends on accurate Jira state at Task &amp; Sub-task level.</span></div>
+            <div class="mitem reveal d6"><span class="mk">→</span><span>Auditability: <b>Jira is the long-term source of truth</b>; Beadbox is the local lens.</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="owncall reveal d7">📣 <b>Ownership:</b> this mirror is the <b>developer’s</b> responsibility. Not the PM’s. Not the architect’s.</div>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 12 — WORKED EXAMPLE ============ -->
+  <section class="slide">
+    <div class="pad">
+      <div class="eyebrow reveal d1">It clicks with an example</div>
+      <h2 class="reveal d2">One feature, top to bottom</h2>
+      <div class="tree">
+        <div class="tnode t-epic reveal d2"><span class="id">EPIC</span><span class="ds">Document automation pipeline</span></div>
+        <div class="tnode t-us reveal d3"><span class="id">ST-1234</span><span class="ds">Auto-classify uploaded invoices into 5 categories &nbsp;·&nbsp; 🌿 branch ST-1234</span></div>
+        <div class="tnode t-task reveal d4"><span class="id">ST-1235 · Backend</span><span class="ds">Implement classification service API &nbsp;=&nbsp; Initech Epic</span></div>
+        <div class="tnode t-sub reveal d4"><span class="id">ST-1236</span><span class="ds">Define DTOs &amp; request validation &nbsp;=&nbsp; Bead</span></div>
+        <div class="tnode t-sub reveal d4"><span class="id">ST-1237</span><span class="ds">Wire the classifier inference call &nbsp;=&nbsp; Bead</span></div>
+        <div class="tnode t-task reveal d5"><span class="id">ST-1239 · Frontend</span><span class="ds">Show classification badge in the invoice list &nbsp;=&nbsp; Initech Epic</span></div>
+        <div class="tnode t-sub reveal d5"><span class="id">ST-1240</span><span class="ds">Render badge component with all 5 states &nbsp;=&nbsp; Bead</span></div>
+        <div class="tnode t-task reveal d6"><span class="id">ST-1242 · DevOps</span><span class="ds">Provision inference endpoint &amp; IAM &nbsp;=&nbsp; Initech Epic</span></div>
+        <div class="tnode t-sub reveal d6"><span class="id">ST-1243</span><span class="ds">Terraform module for inference endpoint &nbsp;=&nbsp; Bead</span></div>
+      </div>
+      <div class="exnote reveal rr d4">🚀 <b>At release time:</b> branch <b>ST-1234</b> off production → all three Tasks merge in → QA validates the full feature → promote. All 8 Sub-tasks ship together.</div>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 13 — QUICK REFERENCE ============ -->
+  <section class="slide">
+    <div class="pad">
+      <div class="eyebrow reveal d1">Keep this handy</div>
+      <h2 class="reveal d2">Quick reference card</h2>
+      <div class="qref">
+        <div class="qitem reveal d2"><div class="q">Where does a strategic initiative live?</div><div class="a">An <b>Epic</b> in Jira</div></div>
+        <div class="qitem reveal d3"><div class="q">What gets released?</div><div class="a">A <b>User Story</b> (one or several per release)</div></div>
+        <div class="qitem reveal d4"><div class="q">Where does the branch start, and what’s its name?</div><div class="a">From production, named the <b>User Story ID</b></div></div>
+        <div class="qitem reveal d5"><div class="q">What does a developer pick up?</div><div class="a">A <b>Task</b> → becomes an Initech Epic locally</div></div>
+        <div class="qitem reveal d6"><div class="q">What’s the smallest tracked unit?</div><div class="a">A <b>Sub-task</b> = a Bead in Beadbox</div></div>
+        <div class="qitem reveal d7"><div class="q">Can a Task ship by itself?</div><div class="a"><b>No</b> — only when its User Story ships</div></div>
+      </div>
+    </div>
+    <div class="foot">Who keeps the mirror alive? The developer working the Task.</div>
+  </section>
+
+  <!-- ============ SLIDE 14 — CLOSING ============ -->
+  <section class="slide">
+    <div class="pad closing">
+      <div class="eyebrow reveal d1">Remember the hinge</div>
+      <h2 class="reveal d2">The <span class="g">User Story</span> is<br>always the release unit.</h2>
+      <p class="lead reveal d3">Strategy flows down into execution. Execution mirrors back into Jira. Everyone sees the same picture — without anyone having to ask.</p>
+      <div class="links">
+        <a class="linkpill reveal d4" href="https://goavanto.atlassian.net/jira/software/c/projects/ST/boards/3108" target="_blank">📌 Strata ST Board #3108</a>
+        <span class="linkpill reveal d5">🗂️ Technical documentation (Notion)</span>
+      </div>
+    </div>
+    <div class="foot">How We Work in Jira — Strata (ST) Board</div>
+  </section>
+
+</main>
+</div>
+
+<!-- deck chrome outside the stage -->
+<nav class="deck-controls" aria-label="Slide navigation">
+  <a href="./index.html" id="homeBtn" title="Back to Engineering Atlas" aria-label="Back to Engineering Atlas">⌂</a>
+  <button id="prevBtn" aria-label="Previous slide">‹</button>
+  <span id="counter">01 / 14</span>
+  <button id="nextBtn" aria-label="Next slide">›</button>
+</nav>
+
+<!-- inline editing affordance -->
+<div class="edit-hotzone" title="Edit mode (E)"></div>
+<button class="edit-toggle" id="editToggle" title="Edit mode (E)">✏️</button>
+<span class="edit-hint" id="editHint">edit mode — click text · Ctrl+S to save</span>
+
+<script>
+/* ===========================================
+   SLIDE PRESENTATION CONTROLLER
+   =========================================== */
+class SlidePresentation{
+  constructor(){
+    this.slides=[...document.querySelectorAll('.slide')];
+    this.current=0;
+    this.stage=document.getElementById('deckStage');
+    this.counter=document.getElementById('counter');
+    this.progress=document.getElementById('progress');
+    this.setupStageScale();
+    this.setupNav();
+    this.show(0);
+  }
+  setupStageScale(){
+    const scale=()=>{
+      const f=Math.min(innerWidth/1920,innerHeight/1080);
+      const x=(innerWidth-1920*f)/2, y=(innerHeight-1080*f)/2;
+      this.stage.style.transform=`translate(${x}px,${y}px) scale(${f})`;
+    };
+    scale();addEventListener('resize',scale);
+  }
+  setupNav(){
+    document.getElementById('nextBtn').addEventListener('click',()=>this.next());
+    document.getElementById('prevBtn').addEventListener('click',()=>this.prev());
+    addEventListener('keydown',e=>{
+      if(e.target.getAttribute&&e.target.getAttribute('contenteditable')==='true')return;
+      if(['ArrowRight','ArrowDown',' ','PageDown'].includes(e.key)){e.preventDefault();this.next();}
+      else if(['ArrowLeft','ArrowUp','PageUp'].includes(e.key)){e.preventDefault();this.prev();}
+      else if(e.key==='Home')this.show(0);
+      else if(e.key==='End')this.show(this.slides.length-1);
+    });
+    /* mouse wheel (debounced) */
+    let wlock=false;
+    addEventListener('wheel',e=>{
+      if(wlock)return;wlock=true;setTimeout(()=>wlock=false,650);
+      if(e.deltaY>20)this.next();else if(e.deltaY<-20)this.prev();
+    },{passive:true});
+    /* touch / swipe */
+    let x0=null;
+    addEventListener('touchstart',e=>x0=e.touches[0].clientX,{passive:true});
+    addEventListener('touchend',e=>{
+      if(x0===null)return;const dx=e.changedTouches[0].clientX-x0;
+      if(Math.abs(dx)>50){dx<0?this.next():this.prev();}x0=null;
+    },{passive:true});
+  }
+  next(){this.show(this.current+1);}
+  prev(){this.show(this.current-1);}
+  show(i){
+    this.current=Math.max(0,Math.min(i,this.slides.length-1));
+    this.slides.forEach((s,n)=>{
+      s.classList.toggle('active',n===this.current);
+      s.classList.toggle('visible',n===this.current);
+    });
+    const pad2=n=>String(n).padStart(2,'0');
+    this.counter.textContent=`${pad2(this.current+1)} / ${pad2(this.slides.length)}`;
+    this.progress.style.width=((this.current+1)/this.slides.length*100)+'%';
+  }
+}
+const deck=new SlidePresentation();
+
+/* ===========================================
+   INLINE EDITING (default affordance)
+   =========================================== */
+class InlineEditor{
+  constructor(){
+    this.isActive=false;
+    this.editable='h1,h2,h3,p,span,div.fx,div.rt,div.zd,div.a,div.q,div.lvwhat,div.ex,div.fn,div.fl,div.ds,div.t,div.m,div.mental';
+    this.hint=document.getElementById('editHint');
+    this.toggleBtn=document.getElementById('editToggle');
+    this.load();
+  }
+  toggleEditMode(){
+    this.isActive=!this.isActive;
+    document.body.classList.toggle('editing',this.isActive);
+    this.toggleBtn.classList.toggle('active',this.isActive);
+    this.hint.classList.toggle('show',this.isActive);
+    document.querySelectorAll(this.editable).forEach(el=>{
+      if(this.isActive){el.setAttribute('contenteditable','true');}
+      else{el.removeAttribute('contenteditable');}
+    });
+    if(!this.isActive){this.save();this.toggleBtn.classList.remove('show');}
+  }
+  save(){
+    try{localStorage.setItem('strata-deck-html',document.querySelector('.deck-stage').innerHTML);}catch(e){}
+  }
+  load(){
+    try{const h=localStorage.getItem('strata-deck-html');if(h){/* kept for reference; not auto-applied to avoid stale structure */}}catch(e){}
+  }
+  download(){
+    const blob=new Blob([document.documentElement.outerHTML],{type:'text/html'});
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+    a.download='how-we-work-in-jira-strata.html';a.click();
+  }
+}
+const editor=new InlineEditor();
+
+/* hotzone + button interactions (JS hover with grace period) */
+const hotzone=document.querySelector('.edit-hotzone');
+const editToggle=document.getElementById('editToggle');
+let hideTimeout=null;
+hotzone.addEventListener('mouseenter',()=>{clearTimeout(hideTimeout);editToggle.classList.add('show');});
+hotzone.addEventListener('mouseleave',()=>{hideTimeout=setTimeout(()=>{if(!editor.isActive)editToggle.classList.remove('show');},400);});
+editToggle.addEventListener('mouseenter',()=>clearTimeout(hideTimeout));
+editToggle.addEventListener('mouseleave',()=>{hideTimeout=setTimeout(()=>{if(!editor.isActive)editToggle.classList.remove('show');},400);});
+hotzone.addEventListener('click',()=>editor.toggleEditMode());
+editToggle.addEventListener('click',()=>editor.toggleEditMode());
+addEventListener('keydown',e=>{
+  if((e.key==='e'||e.key==='E')&&!(e.target.getAttribute&&e.target.getAttribute('contenteditable')==='true')){editor.toggleEditMode();}
+  if((e.ctrlKey||e.metaKey)&&e.key==='s'){e.preventDefault();editor.save();editor.download();}
+});
+</script>
+</body>
+</html>

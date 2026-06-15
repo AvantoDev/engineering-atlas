@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Engineering Atlas — AvantoDev</title>
+<meta name="description" content="An explorable, visual hub for how AvantoDev engineering works: processes, architecture, and workflows.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   ENGINEERING ATLAS — landing hub
+   Same "Strategy → Execution Blueprint" visual language as the decks.
+   This is a normal scrolling page (not a fixed-stage deck).
+   ============================================================ */
+:root{
+  --bg:#070b16; --bg2:#04060d;
+  --panel:rgba(255,255,255,.035);
+  --line:rgba(255,255,255,.12);
+  --line-strong:rgba(255,255,255,.22);
+  --text:#eef2fb; --muted:#8492af;
+  --strat:#5b8def; --exec:#e0a35e; --epic:#b07ce0; --bead:#3cc279;
+  --strat-t:#a9c4ff; --exec-t:#f2cf9b; --epic-t:#d3b6f0; --bead-t:#92e6b6;
+  --font-display:'Bricolage Grotesque',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+  --ease:cubic-bezier(.16,1,.3,1);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:
+    radial-gradient(80% 60% at 8% -5%,rgba(91,141,239,.20),transparent 55%),
+    radial-gradient(70% 60% at 98% 8%,rgba(224,163,94,.13),transparent 55%),
+    var(--bg);
+  color:var(--text);font-family:var(--font-mono);min-height:100vh;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+/* blueprint grid behind everything */
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:linear-gradient(rgba(120,150,210,.045) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(120,150,210,.045) 1px,transparent 1px);
+  background-size:64px 64px;
+  mask-image:radial-gradient(120% 90% at 50% 0%,#000 55%,transparent 100%);
+}
+.wrap{position:relative;z-index:1;max-width:1320px;margin:0 auto;padding:0 48px;}
+
+/* ===== top bar ===== */
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:34px 0 0;}
+.brand{display:flex;align-items:center;gap:14px;font-size:15px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted);}
+.brand .dot{width:11px;height:11px;border-radius:50%;background:var(--exec);box-shadow:0 0 14px var(--exec);}
+.topbar .gh{font-size:14px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:999px;transition:.25s var(--ease);}
+.topbar .gh:hover{border-color:var(--strat);color:var(--text);}
+
+/* ===== hero ===== */
+.hero{padding:96px 0 70px;max-width:1000px;}
+.eyebrow{font-size:18px;letter-spacing:.3em;text-transform:uppercase;color:var(--strat-t);}
+h1{font-family:var(--font-display);font-weight:800;font-size:clamp(56px,8.5vw,128px);line-height:.9;letter-spacing:-.025em;margin-top:22px;}
+h1 .g{background:linear-gradient(100deg,var(--strat),var(--exec));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.tagline{font-size:clamp(19px,2.3vw,27px);line-height:1.5;color:var(--muted);max-width:760px;margin-top:34px;}
+.tagline b{color:var(--text);font-weight:500;}
+.herometa{display:flex;gap:14px;flex-wrap:wrap;margin-top:40px;}
+.chip{font-size:15px;letter-spacing:.06em;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:10px 18px;}
+.chip b{color:var(--text);font-weight:500;}
+
+/* ===== section grid ===== */
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;margin:34px 0 30px;border-top:1px solid var(--line);padding-top:34px;}
+.sec-head h2{font-family:var(--font-display);font-weight:700;font-size:30px;letter-spacing:-.01em;}
+.sec-head .count{font-size:15px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;padding-bottom:30px;}
+.card{position:relative;display:flex;flex-direction:column;min-height:300px;
+  border:1.5px solid var(--line);border-top-width:5px;border-radius:16px;padding:34px 32px;
+  background:var(--panel);text-decoration:none;color:inherit;overflow:hidden;
+  transition:transform .35s var(--ease),border-color .35s var(--ease),background .35s var(--ease);}
+.card .no{font-family:var(--font-display);font-weight:800;font-size:46px;line-height:1;color:var(--muted);opacity:.7;}
+.card h3{font-family:var(--font-display);font-weight:700;font-size:30px;line-height:1.08;margin-top:18px;letter-spacing:-.01em;}
+.card p{font-size:18px;line-height:1.5;color:var(--muted);margin-top:14px;flex:1;}
+.card .foot{display:flex;align-items:center;justify-content:space-between;margin-top:22px;}
+.tag{font-size:13px;letter-spacing:.18em;text-transform:uppercase;padding:6px 12px;border-radius:999px;border:1px solid var(--line);color:var(--muted);}
+.tag.live{color:var(--bead-t);border-color:rgba(60,194,121,.5);background:rgba(60,194,121,.08);}
+.go{font-size:22px;color:var(--muted);transition:transform .3s var(--ease),color .3s var(--ease);}
+
+/* live cards are interactive */
+.card.live{cursor:pointer;}
+.card.live .no{color:var(--strat-t);opacity:1;}
+.card.live:hover{transform:translateY(-6px);border-color:var(--strat);background:rgba(91,141,239,.06);}
+.card.live:hover .go{transform:translateX(6px);color:var(--strat-t);}
+/* accent per card */
+.k-jira{border-top-color:var(--strat);}
+.k-arch{border-top-color:var(--epic);}
+.k-rel{border-top-color:var(--exec);}
+.k-swarm{border-top-color:var(--bead);}
+.k-beadbox{border-top-color:var(--strat);}
+.k-qa{border-top-color:var(--exec);}
+/* soon cards muted */
+.card.soon{opacity:.62;}
+.card.soon:hover{opacity:.82;border-color:var(--line-strong);}
+
+/* ===== footer ===== */
+footer{border-top:1px solid var(--line);margin-top:30px;padding:44px 0 70px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:18px;}
+footer .f-left{font-size:15px;color:var(--muted);letter-spacing:.04em;}
+footer .f-left b{color:var(--text);font-weight:500;}
+footer .f-right{font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);}
+
+/* ===== entrance reveal ===== */
+.reveal{opacity:0;transform:translateY(26px);animation:rise .8s var(--ease) forwards;}
+@keyframes rise{to{opacity:1;transform:none;}}
+.card.soon.reveal{animation-name:riseSoon;}
+@keyframes riseSoon{to{opacity:.62;transform:none;}}
+.d1{animation-delay:.05s}.d2{animation-delay:.13s}.d3{animation-delay:.21s}
+.d4{animation-delay:.29s}.d5{animation-delay:.37s}.d6{animation-delay:.45s}
+.d7{animation-delay:.10s}.d8{animation-delay:.18s}
+@media(prefers-reduced-motion:reduce){.reveal{animation-duration:.01ms}}
+
+/* ===== responsive ===== */
+@media(max-width:1040px){.grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:680px){
+  .wrap{padding:0 24px;}
+  .grid{grid-template-columns:1fr;}
+  .hero{padding:64px 0 48px;}
+  .topbar .gh{display:none;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ===== TOP BAR ===== -->
+  <header class="topbar">
+    <div class="brand reveal d1"><span class="dot"></span>AvantoDev · Engineering</div>
+    <a class="gh reveal d1" href="https://github.com/AvantoDev/engineering-atlas" target="_blank" rel="noopener">View on GitHub ↗</a>
+  </header>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero">
+    <div class="eyebrow reveal d1">The engineering field guide</div>
+    <h1 class="reveal d2">Engineering<br><span class="g">Atlas</span></h1>
+    <p class="tagline reveal d3">An explorable, visual map of <b>how we actually work</b> — our processes, architecture, and workflows, one interactive section at a time. Built for PMs, architects, developers, QA and DevOps alike.</p>
+    <div class="herometa reveal d4">
+      <span class="chip"><b>1</b> section live</span>
+      <span class="chip"><b>5</b> in the pipeline</span>
+      <span class="chip">Updated continuously</span>
+    </div>
+  </section>
+
+  <!-- ===== SECTIONS ===== -->
+  <div class="sec-head reveal d4">
+    <h2>Sections</h2>
+    <span class="count">Pick a topic to explore</span>
+  </div>
+
+  <main class="grid">
+
+    <!-- LIVE — Jira workflow deck -->
+    <a class="card live k-jira reveal d2" href="./jira-workflow.html">
+      <div class="no">01</div>
+      <h3>How We Work in Jira</h3>
+      <p>The four-level work hierarchy on the Strata (ST) board — Epic, Story, Task, Sub-task — and how it mirrors Initech &amp; Beadbox.</p>
+      <div class="foot"><span class="tag live">● Live</span><span class="go">→</span></div>
+    </a>
+
+    <!-- SOON — Architecture rules -->
+    <div class="card soon k-arch reveal d3">
+      <div class="no">02</div>
+      <h3>Architecture Rules</h3>
+      <p>The binding decisions (AR-01…AR-05): one domain = one repo, Kafka for async, DB idempotency, REST vs GraphQL, research-before-building.</p>
+      <div class="foot"><span class="tag">Coming soon</span><span class="go">·</span></div>
+    </div>
+
+    <!-- SOON — Release & branching -->
+    <div class="card soon k-rel reveal d4">
+      <div class="no">03</div>
+      <h3>Release &amp; Branching</h3>
+      <p>How a release actually happens: production branches named by User Story, Task PRs merging in, QA validation, and promotion.</p>
+      <div class="foot"><span class="tag">Coming soon</span><span class="go">·</span></div>
+    </div>
+
+    <!-- SOON — Agent swarm -->
+    <div class="card soon k-swarm reveal d5">
+      <div class="no">04</div>
+      <h3>The Agent Swarm</h3>
+      <p>Supervisor → tech-arch → coder / devops / QA. How autonomous agents pick up Beads, build, and report back.</p>
+      <div class="foot"><span class="tag">Coming soon</span><span class="go">·</span></div>
+    </div>
+
+    <!-- SOON — Beadbox & Initech -->
+    <div class="card soon k-beadbox reveal d6">
+      <div class="no">05</div>
+      <h3>Beadbox &amp; Initech</h3>
+      <p>The local execution lens: Initech Epics, Beads, and the discipline of keeping Jira mirrored with what you do locally.</p>
+      <div class="foot"><span class="tag">Coming soon</span><span class="go">·</span></div>
+    </div>
+
+    <!-- SOON — QA & testing -->
+    <div class="card soon k-qa reveal d6">
+      <div class="no">06</div>
+      <h3>QA &amp; Testing</h3>
+      <p>Test strategy, Playwright automation, regression gates, and how quality is validated before anything reaches production.</p>
+      <div class="foot"><span class="tag">Coming soon</span><span class="go">·</span></div>
+    </div>
+
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <div class="f-left">🧭 <b>Engineering Atlas</b> — a living reference, maintained by the AvantoDev Engineering team.</div>
+    <div class="f-right">avantodev.github.io / engineering-atlas</div>
+  </footer>
+
+</div>
+</body>
+</html>
