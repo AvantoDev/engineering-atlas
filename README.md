@@ -27,7 +27,7 @@ Each **section** is its own self-contained HTML file at the repo root, linked fr
 ./publish.sh
 ```
 
-Commits everything in the repo and pushes to `main`. The live URL never changes; the first build after enabling Pages takes ~1 min, later updates are near-instant.
+`main` is protected by an org ruleset (changes require a **Pull Request** + the **PR Security Pipeline** check), so `publish.sh` never pushes to `main` directly — it creates a short-lived branch, opens a **PR** (reviewer: `agile-cmejia`), and prints its URL. **Merge it once the required checks pass** and the live site updates. The URL never changes.
 
 ## Add a new section
 
