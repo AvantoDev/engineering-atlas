@@ -225,7 +225,7 @@ h2{font-family:var(--font-display);font-weight:800;font-size:72px;line-height:.9
                                       └──►  <span class="gs">release/&lt;cycle&gt;</span>  ──►  <span class="gp">production</span>   · only ready Stories</div>
       <div class="keynote reveal d3">🧪 The arrow into <code>qa</code> is a <b>dead end</b> — testing only. 📦 Only the <b>release branch</b> reaches <code>production</code>. The US branch is the single source that feeds both.</div>
     </div>
-    <div class="foot">Read it left to right: where your branch comes from, and where it goes</div>
+    <div class="foot">Read it left to right: where the US branch comes from, and where it goes</div>
   </section>
 
   <!-- 6 TUTORIAL INTRO -->
@@ -236,8 +236,8 @@ h2{font-family:var(--font-display);font-weight:800;font-size:72px;line-height:.9
       <p class="lead reveal d2">A real example, day by day — so you can repeat it on your own work. Five moments, start to ship:</p>
       <div class="tl reveal d3">
         <div class="tlrow"><span class="t" style="color:var(--strat-t)">Day 1</span><span><b>Start.</b> Find or create the shared US branch; branch your Task off it.</span></div>
-        <div class="tlrow"><span class="t" style="color:var(--exec-t)">Day 2</span><span><b>Test.</b> Merge your branch into <code>qa</code> and test it with everyone else's.</span></div>
-        <div class="tlrow"><span class="t" style="color:var(--exec-t)">Day 3</span><span><b>Sync.</b> A release shipped — pull <code>production</code> into your branch.</span></div>
+        <div class="tlrow"><span class="t" style="color:var(--exec-t)">Day 2</span><span><b>Test.</b> Merge the US branch into <code>qa</code> and test it with everyone else's.</span></div>
+        <div class="tlrow"><span class="t" style="color:var(--exec-t)">Day 3</span><span><b>Sync.</b> A release shipped — pull <code>production</code> into the US branch.</span></div>
         <div class="tlrow"><span class="t" style="color:var(--bead-t)">Day 4</span><span><b>Ready.</b> Tests pass — mark it <code>ready-to-release</code>. You're done.</span></div>
         <div class="tlrow"><span class="t" style="color:var(--bead-t)">Ship</span><span><b>Release day.</b> The Lead ships your Story with the release.</span></div>
       </div>
@@ -276,7 +276,7 @@ h2{font-family:var(--font-display);font-weight:800;font-size:72px;line-height:.9
       </div>
       <div class="keynote reveal d4" style="border-left-color:var(--exec);">⚠️ <code>qa</code> is the shared <b>test</b> environment — it <b>never goes to production</b>. Found a bug? Fix it <b>on your US branch</b> and merge again. <b>Never commit a fix directly to <code>qa</code></b> (it would be in qa but missing from production).</div>
     </div>
-    <div class="foot">Day 2 · merge your branch → qa · test · qa never ships</div>
+    <div class="foot">Day 2 · merge the US branch → qa · test · qa never ships</div>
   </section>
 
   <!-- 9 DAY 3 -->
@@ -284,14 +284,14 @@ h2{font-family:var(--font-display);font-weight:800;font-size:72px;line-height:.9
     <div class="pad">
       <div class="eyebrow reveal d1"><span class="day">Day 3</span> Stay in sync</div>
       <h2 class="reveal d2">A release shipped — pull it in</h2>
-      <p class="lead reveal d2">While you were working, a release (or a hotfix) went to <code>production</code>. It moved forward. Pull it into your branch so you don't drift — and so you don't accidentally <b>re-introduce a bug a hotfix already fixed</b>.</p>
+      <p class="lead reveal d2">While you were working, a release (or a hotfix) went to <code>production</code>. It moved forward. Pull it into the US branch so it doesn't drift — and so you don't accidentally <b>re-introduce a bug a hotfix already fixed</b>.</p>
       <div class="cmd reveal d3">
         <span class="p">$</span> git checkout ST-1234<br>
         <span class="p">$</span> git merge production &nbsp;<span class="cm"># MERGE — never rebase</span>
       </div>
-      <div class="keynote reveal d4">🟢 Always <b>merge</b> <code>production</code> into your branch — <b>never rebase</b> it. Your branch is shared (Task PRs point at it); a rebase would force-push and break them. Do this after <b>every</b> release or hotfix.</div>
+      <div class="keynote reveal d4">🟢 Always <b>merge</b> <code>production</code> into the US branch — <b>never rebase</b> it (it's shared; Task PRs point at it, so a rebase force-pushes and breaks them). <b>Any dev on the Story can run this; the mentor is accountable</b> for the US branch staying in sync. Do it after <b>every</b> release or hotfix.</div>
     </div>
-    <div class="foot">Day 3 · git merge production into your branch · merge, not rebase</div>
+    <div class="foot">Day 3 · git merge production into the US branch · merge, not rebase</div>
   </section>
 
   <!-- 10 DAY 4 -->
@@ -326,7 +326,7 @@ h2{font-family:var(--font-display);font-weight:800;font-size:72px;line-height:.9
         <div class="farrow reveal d5">→</div>
         <div class="fnode prod reveal d5"><div class="fn">production 🚀</div><div class="fl">approved → live</div></div>
       </div>
-      <div class="keynote reveal d5">Your Story ships <b>whole</b>. Nothing is ever <b>cherry-picked</b>; if a Story has to be dropped, the Lead just <b>rebuilds the release</b> without it — your branch stays safe in <code>qa</code>.</div>
+      <div class="keynote reveal d5">Your Story ships <b>whole</b>. Nothing is ever <b>cherry-picked</b>; if a Story has to be dropped, the Lead just <b>rebuilds the release</b> without it — the US branch stays safe in <code>qa</code>.</div>
     </div>
     <div class="foot">Release day · Lead-owned · pre-main validates before go-live</div>
   </section>
@@ -371,7 +371,7 @@ h2{font-family:var(--font-display);font-weight:800;font-size:72px;line-height:.9
         <div class="gcard gc-1 reveal d2"><div class="h">Bug in your Story</div><div class="d">Found while testing in qa.</div><div class="fix">→ Add <b>more commits on your US branch</b> (fix-forward), then merge to qa again. Don't delete the branch.</div></div>
         <div class="gcard gc-3 reveal d3"><div class="h">Urgent production fix</div><div class="d">Something is broken in production now.</div><div class="fix">→ <b>Hotfix:</b> branch off <code>production</code> → PR back to <code>production</code>. Then everyone syncs.</div></div>
         <div class="gcard gc-2 reveal d4"><div class="h">Your Story must be pulled from a release</div><div class="d">It's not ready in time.</div><div class="fix">→ The <b>Lead rebuilds the release</b> without it. You <b>never</b> cherry-pick. Your branch waits in qa.</div></div>
-        <div class="gcard gc-4 reveal d5"><div class="h">production moved ahead of you</div><div class="d">A release shipped mid-work.</div><div class="fix">→ <code style="color:var(--bead-t)">git merge production</code> into your branch (Day 3). Re-test.</div></div>
+        <div class="gcard gc-4 reveal d5"><div class="h">production moved ahead of you</div><div class="d">A release shipped mid-work.</div><div class="fix">→ <code style="color:var(--bead-t)">git merge production</code> into the US branch (Day 3). Re-test.</div></div>
       </div>
     </div>
     <div class="foot">Every fix is forward · nothing is ever cherry-picked</div>
@@ -401,7 +401,7 @@ h2{font-family:var(--font-display);font-weight:800;font-size:72px;line-height:.9
     <div class="pad closing">
       <div class="eyebrow reveal d1">Two rules that never break</div>
       <h2 class="reveal d2"><span class="g">qa</span> is for testing — it never ships.<br>Nothing is ever cherry-picked.</h2>
-      <p class="lead reveal d3">Everything else you can look up here. Cut from <code>production</code>, build on your branch, test in <code>qa</code>, mark it ready — and your Story ships, whole, with the release.</p>
+      <p class="lead reveal d3">Everything else you can look up here. Cut from <code>production</code>, build on the US branch, test in <code>qa</code>, mark it ready — and your Story ships, whole, with the release.</p>
       <p class="lead reveal d4" style="margin-top:24px;color:var(--bead-t);">You keep the flow healthy. When in doubt, ask your Lead — but never cherry-pick. 🟢</p>
     </div>
     <div class="foot">Git Flow — Developer Guide · Strata (ST) · Engineering Atlas</div>
