@@ -39,29 +39,31 @@ img,svg{max-width:100%;max-height:100%;}
 h2{font-family:var(--font-display);font-weight:800;font-size:78px;line-height:.98;letter-spacing:-.02em;margin-top:16px;}
 .lead{font-size:28px;line-height:1.5;color:var(--muted);max-width:1320px;margin-top:22px;}
 .lead b{color:var(--text);font-weight:500;}
+.lead code,.keynote code,.crow code,.cmd code{font-family:var(--font-mono);}
+.tracklabel{font-size:17px;letter-spacing:.2em;text-transform:uppercase;margin-top:30px;}
 .foot{position:absolute;left:130px;bottom:38px;font-size:15px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);}
 
 /* TITLE */
 .title h1{font-family:var(--font-display);font-weight:800;font-size:150px;line-height:.9;letter-spacing:-.025em;margin-top:54px;}
 .title h1 .g{background:linear-gradient(100deg,var(--strat),var(--exec));-webkit-background-clip:text;background-clip:text;color:transparent;}
-.title .lead{font-size:32px;max-width:1100px;}
+.title .lead{font-size:32px;max-width:1180px;}
 .title .chips{display:flex;gap:14px;margin-top:44px;flex-wrap:wrap;}
 .chip{font-size:18px;padding:12px 20px;border-radius:999px;border:1.5px solid var(--line);color:var(--muted);}
 .chip b{color:var(--text);font-weight:500;}
 .chip.no{border-color:rgba(224,103,106,.5);color:var(--danger-t);}
 
 /* node/arrow flow */
-.flow{display:flex;align-items:stretch;gap:0;margin-top:60px;flex-wrap:wrap;}
-.fnode{flex:1;min-width:150px;border:1.5px solid var(--line);border-radius:14px;padding:26px 20px;background:var(--panel);text-align:center;}
-.fnode .fn{font-family:var(--font-display);font-weight:800;font-size:30px;}
-.fnode .fl{font-size:16px;color:var(--muted);margin-top:8px;line-height:1.4;}
+.flow{display:flex;align-items:stretch;gap:0;margin-top:14px;flex-wrap:wrap;}
+.fnode{flex:1;min-width:150px;border:1.5px solid var(--line);border-radius:14px;padding:24px 20px;background:var(--panel);text-align:center;}
+.fnode .fn{font-family:var(--font-display);font-weight:800;font-size:28px;}
+.fnode .fl{font-size:15px;color:var(--muted);margin-top:8px;line-height:1.4;}
 .fnode.prod{border-color:rgba(60,194,121,.6)}.fnode.prod .fn{color:var(--bead-t)}
 .fnode.story{border-color:rgba(91,141,239,.6)}.fnode.story .fn{color:var(--strat-t)}
 .fnode.qa{border-color:rgba(224,163,94,.6)}.fnode.qa .fn{color:var(--exec-t)}
-.farrow{display:flex;align-items:center;color:var(--muted);font-size:30px;padding:0 16px;}
+.farrow{display:flex;align-items:center;color:var(--muted);font-size:24px;padding:0 16px;white-space:nowrap;}
 
 /* commit track */
-.track{position:relative;margin-top:26px;padding:34px 20px 14px;}
+.track{position:relative;margin-top:30px;padding:34px 20px 14px;}
 .track .lbl{position:absolute;left:0;top:-2px;font-size:17px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);}
 .line{display:flex;align-items:center;gap:0;}
 .commit{width:34px;height:34px;border-radius:50%;border:2px solid var(--line);background:#0c1426;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--muted);flex:0 0 auto;position:relative;}
@@ -75,74 +77,76 @@ h2{font-family:var(--font-display);font-weight:800;font-size:78px;line-height:.9
 .commit .cap b{color:var(--text);font-weight:500;}
 
 /* mapping table */
-.map{margin-top:34px;border:1.5px solid var(--line);border-radius:14px;overflow:hidden;}
+.map{margin-top:30px;border:1.5px solid var(--line);border-radius:14px;overflow:hidden;}
 .mrow{display:grid;grid-template-columns:1fr 1.2fr 1.4fr;}
-.mrow>div{padding:18px 28px;border-bottom:1px solid var(--line);font-size:21px;}
+.mrow>div{padding:16px 28px;border-bottom:1px solid var(--line);font-size:20px;}
 .mrow:last-child>div{border-bottom:none}
 .mhead>div{background:rgba(255,255,255,.05);font-size:15px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);}
 .mrow .j{font-family:var(--font-display);font-weight:700}
 .j-epic{color:var(--epic-t)}.j-story{color:var(--strat-t)}.j-task{color:var(--exec-t)}.j-bead{color:var(--bead-t)}
-.mrow code{font-family:var(--font-mono);color:var(--text);font-size:19px}
+.mrow code{color:var(--text);font-size:18px}
 
 /* 2x2 / grids */
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-top:40px;}
-.gcard{border:1.5px solid var(--line);border-left-width:5px;border-radius:14px;padding:30px 32px;background:var(--panel);}
-.gcard .h{font-family:var(--font-display);font-weight:700;font-size:27px;}
-.gcard .d{font-size:21px;line-height:1.5;color:var(--muted);margin-top:12px;}
+.gcard{border:1.5px solid var(--line);border-left-width:5px;border-radius:14px;padding:28px 30px;background:var(--panel);}
+.gcard .h{font-family:var(--font-display);font-weight:700;font-size:26px;}
+.gcard .d{font-size:20px;line-height:1.5;color:var(--muted);margin-top:12px;}
 .gcard .d b{color:var(--text);font-weight:500}
-.gcard .fix{margin-top:16px;font-size:19px;color:var(--bead-t);}
+.gcard .fix{margin-top:14px;font-size:19px;color:var(--bead-t);}
 .gc-1{border-left-color:var(--exec)}.gc-2{border-left-color:var(--strat)}.gc-3{border-left-color:var(--danger)}.gc-4{border-left-color:var(--bead)}
 .gc-1 .h{color:var(--exec-t)}.gc-2 .h{color:var(--strat-t)}.gc-3 .h{color:var(--danger-t)}.gc-4 .h{color:var(--bead-t)}
 
 /* command block */
-.cmd{margin-top:26px;border:1.5px solid var(--line);border-radius:12px;background:rgba(4,7,15,.6);padding:24px 28px;font-size:22px;line-height:1.7;}
+.cmd{margin-top:26px;border:1.5px solid var(--line);border-radius:12px;background:rgba(4,7,15,.6);padding:24px 28px;font-size:21px;line-height:1.75;}
 .cmd .c{color:var(--bead-t)}.cmd .p{color:var(--muted)}.cmd .k{color:var(--exec-t)}.cmd .cm{color:var(--muted);font-style:italic}
 
 /* multi-repo */
-.repos{display:flex;gap:22px;margin-top:40px;}
-.repo{flex:1;border:1.5px solid rgba(91,141,239,.4);border-radius:14px;padding:28px;background:var(--panel);}
-.repo .rn{font-family:var(--font-mono);font-size:18px;color:var(--muted);}
-.repo .rb{font-family:var(--font-display);font-weight:700;font-size:30px;color:var(--strat-t);margin-top:10px;}
-.repo .rt{font-size:17px;color:var(--muted);margin-top:8px;line-height:1.4}
-.keynote{margin-top:30px;font-size:23px;border-left:4px solid var(--strat);padding-left:22px;color:var(--muted)}
+.repos{display:flex;gap:22px;margin-top:14px;}
+.repo{flex:1;border:1.5px solid rgba(91,141,239,.4);border-radius:14px;padding:24px;background:var(--panel);}
+.repo .rn{font-family:var(--font-mono);font-size:17px;color:var(--muted);}
+.repo .rb{font-family:var(--font-display);font-weight:700;font-size:28px;color:var(--strat-t);margin-top:8px;}
+.repo .rt{font-size:16px;color:var(--muted);margin-top:8px;line-height:1.4}
+.keynote{margin-top:28px;font-size:22px;line-height:1.5;border-left:4px solid var(--strat);padding-left:22px;color:var(--muted)}
 .keynote b{color:var(--text);font-weight:500}
 .keynote code{color:var(--strat-t)}
 
-/* timeline */
-.tl{margin-top:36px;display:flex;flex-direction:column;gap:18px;}
-.tlrow{display:flex;gap:20px;align-items:flex-start;font-size:23px;line-height:1.45;color:var(--muted)}
-.tlrow .t{font-family:var(--font-display);font-weight:800;font-size:26px;color:var(--strat-t);flex:0 0 64px}
+/* timeline / numbered list */
+.tl{margin-top:30px;display:flex;flex-direction:column;gap:16px;}
+.tlrow{display:flex;gap:20px;align-items:flex-start;font-size:22px;line-height:1.45;color:var(--muted)}
+.tlrow .t{font-family:var(--font-display);font-weight:800;font-size:24px;color:var(--strat-t);flex:0 0 56px}
 .tlrow.bad .t{color:var(--danger-t)}.tlrow.good .t{color:var(--bead-t)}
 .tlrow b{color:var(--text);font-weight:500}
+.tlrow code{color:var(--strat-t)}
 
 /* ownership */
-.own{margin-top:34px;border:1.5px solid var(--line);border-radius:14px;overflow:hidden}
-.orow{display:grid;grid-template-columns:1.6fr 1fr}
-.orow>div{padding:18px 28px;border-bottom:1px solid var(--line);font-size:21px}
+.own{margin-top:30px;border:1.5px solid var(--line);border-radius:14px;overflow:hidden}
+.orow{display:grid;grid-template-columns:1.7fr 1fr}
+.orow>div{padding:17px 28px;border-bottom:1px solid var(--line);font-size:21px}
 .orow:last-child>div{border-bottom:none}
 .ohead>div{background:rgba(255,255,255,.05);font-size:15px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
 .orow .who{font-family:var(--font-display);font-weight:700;color:var(--exec-t)}
+.orow code{color:var(--text)}
 
 /* cheat table */
-.cheat{margin-top:30px;border:1.5px solid var(--line);border-radius:14px;overflow:hidden}
-.crow{display:grid;grid-template-columns:1fr 1.3fr}
-.crow>div{padding:16px 28px;border-bottom:1px solid var(--line);font-size:21px}
+.cheat{margin-top:26px;border:1.5px solid var(--line);border-radius:14px;overflow:hidden}
+.crow{display:grid;grid-template-columns:1fr 1.4fr}
+.crow>div{padding:15px 28px;border-bottom:1px solid var(--line);font-size:20px}
 .crow:last-child>div{border-bottom:none}
 .chead>div{background:rgba(255,255,255,.05);font-size:15px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
 .crow .act{color:var(--text)}.crow .act code{color:var(--bead-t)}
 
 /* closing */
 .closing{display:flex;flex-direction:column;justify-content:center;height:100%}
-.closing h2{font-size:104px}
+.closing h2{font-size:100px}
 .closing .g{background:linear-gradient(100deg,var(--strat),var(--exec));-webkit-background-clip:text;background-clip:text;color:transparent}
-.rules{margin-top:34px;display:grid;grid-template-columns:1fr 1fr;gap:14px 50px;max-width:1500px}
-.rule{font-size:20px;color:var(--muted);border-left:3px solid var(--strat);padding-left:16px}
+.rules{margin-top:34px;display:grid;grid-template-columns:1fr 1fr;gap:14px 50px;max-width:1520px}
+.rule{font-size:20px;color:var(--muted);border-left:3px solid var(--strat);padding-left:16px;line-height:1.4}
 .rule b{color:var(--text);font-weight:600}
 
 /* reveal */
 .reveal{opacity:0;transform:translateY(28px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
 .slide.visible .reveal{opacity:1;transform:none}
-.slide.visible .d1{transition-delay:.08s}.slide.visible .d2{transition-delay:.2s}.slide.visible .d3{transition-delay:.32s}.slide.visible .d4{transition-delay:.44s}.slide.visible .d5{transition-delay:.56s}.slide.visible .d6{transition-delay:.68s}
+.slide.visible .d1{transition-delay:.08s}.slide.visible .d2{transition-delay:.2s}.slide.visible .d3{transition-delay:.32s}.slide.visible .d4{transition-delay:.44s}.slide.visible .d5{transition-delay:.56s}.slide.visible .d6{transition-delay:.68s}.slide.visible .d7{transition-delay:.8s}
 
 /* deck chrome */
 .deck-controls{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:1000;display:flex;align-items:center;gap:16px;font-family:var(--font-mono);color:var(--muted);font-size:14px;letter-spacing:.12em;background:rgba(7,11,22,.7);border:1px solid var(--line);border-radius:999px;padding:8px 18px;backdrop-filter:blur(8px)}
@@ -161,63 +165,67 @@ h2{font-family:var(--font-display);font-weight:800;font-size:78px;line-height:.9
     <div class="pad">
       <div class="eyebrow reveal d1">Engineering Atlas · Section</div>
       <h1 class="reveal d2">Git <span class="g">Flow</span></h1>
-      <p class="lead reveal d3">How the four-level Jira hierarchy maps to branches — and how we ship Strata <b>without ever cherry-picking</b>.</p>
+      <p class="lead reveal d3">How the Jira hierarchy maps to branches — and how we ship Strata <b>without ever cherry-picking</b>. Two tracks; two permanent branches: <b>qa</b> &amp; <b>production</b>.</p>
       <div class="chips">
-        <span class="chip reveal d4"><b>US</b> = the release unit · <b>qa</b> = a sink</span>
-        <span class="chip no reveal d5">✕ no cherry-pick, ever</span>
+        <span class="chip reveal d4"><b>US</b> = the release unit</span>
+        <span class="chip reveal d4"><b>qa</b> = a sink, never promoted</span>
+        <span class="chip no reveal d5">✕ no cherry-pick</span>
         <span class="chip reveal d6">🏳️ no feature flags (yet)</span>
       </div>
     </div>
-    <div class="foot">Strata (ST) · branch-only model</div>
+    <div class="foot">Strata (ST) · branch-only · two-track model</div>
   </section>
 
   <!-- 2 THE MODEL -->
   <section class="slide">
     <div class="pad">
       <div class="eyebrow reveal d1">The model · two tracks</div>
-      <h2 class="reveal d2">Test in qa · ship via a release branch</h2>
+      <h2 class="reveal d2">The US branch feeds two tracks</h2>
+
+      <div class="tracklabel reveal d3" style="color:var(--exec-t)">🧪 Testing track — never ships</div>
       <div class="flow">
-        <div class="fnode prod reveal d2"><div class="fn">production</div><div class="fl">baseline</div></div>
-        <div class="farrow reveal d2">→</div>
-        <div class="fnode story reveal d3"><div class="fn">US ST-1234</div><div class="fl">the gate · Tasks merge in</div></div>
-        <div class="farrow reveal d3">→</div>
-        <div class="fnode reveal d4" style="border-color:rgba(91,141,239,.6)"><div class="fn" style="color:var(--strat-t)">release/2026-06</div><div class="fl">disposable · only ready US</div></div>
-        <div class="farrow reveal d4">→</div>
+        <div class="fnode story reveal d3"><div class="fn">US ST-1234 (gate)</div><div class="fl">Tasks merge in · front vs back</div></div>
+        <div class="farrow reveal d3">merge →</div>
+        <div class="fnode qa reveal d3"><div class="fn">qa</div><div class="fl">integration accumulator · SINK · never promoted</div></div>
+      </div>
+
+      <div class="tracklabel reveal d4" style="color:var(--strat-t)">📦 Release track — what ships</div>
+      <div class="flow">
+        <div class="fnode prod reveal d4"><div class="fn">production</div><div class="fl">baseline</div></div>
+        <div class="farrow reveal d4">cut →</div>
+        <div class="fnode reveal d4" style="border-color:rgba(91,141,239,.6)"><div class="fn" style="color:var(--strat-t)">release/2026-06</div><div class="fl">disposable · volcar only ready US</div></div>
+        <div class="farrow reveal d5">→</div>
         <div class="fnode prod reveal d5"><div class="fn">production 🚀</div><div class="fl">pre-main (k8s) validates only the release</div></div>
       </div>
-      <div class="keynote reveal d4" style="border-left-color:var(--exec);margin-top:28px;">🧪 <b>Testing track (parallel):</b> in-flight US branches also merge into <code style="color:var(--exec-t)">qa</code> for integrated testing — <b>qa is a sink, never promoted</b>.</div>
-      <div class="map reveal d5">
-        <div class="mrow mhead"><div>Jira</div><div>git</div><div>Notes</div></div>
-        <div class="mrow"><div class="j j-story">User Story</div><div><code>ST-1234</code> branch — the gate</div><div>cut from <code>production</code> · largest release/branch unit</div></div>
-        <div class="mrow"><div class="j j-task">Task = Initech Epic</div><div><code>ST-1235-backend</code> → merge-commit → US branch</div><div>front tests vs back here</div></div>
-        <div class="mrow"><div class="j j-bead">Sub-task = Bead</div><div>a commit in the Task branch</div><div>—</div></div>
-      </div>
+
+      <div class="keynote reveal d5" style="margin-top:32px;">🔑 The same US branch goes <b>both</b> ways: <b>merge → <code>qa</code></b> for testing, and (when ready) <b>volcada → release branch</b> to ship. <code>qa</code> is never on the path to production.</div>
     </div>
-    <div class="foot">Only qa &amp; production are permanent · Task/US/release are ephemeral · never rebase-merge</div>
+    <div class="foot">Only qa &amp; production are permanent · Task/US/release are ephemeral</div>
   </section>
 
-  <!-- 3 MULTI-REPO -->
+  <!-- 3 THE GATE + MULTI-REPO -->
   <section class="slide">
     <div class="pad">
-      <div class="eyebrow reveal d1">One Story, many repos</div>
-      <h2 class="reveal d2">The branch name is the coordination key</h2>
-      <p class="lead reveal d2">A Story crosses repos (AR-01). Each repo gets <b>its own <code style="color:var(--strat-t)">ST-1234</code> branch — same name everywhere.</b></p>
+      <div class="eyebrow reveal d1">The gate</div>
+      <h2 class="reveal d2">Task → US branch — the gate</h2>
+      <p class="lead reveal d2">Tasks (the tickets inside a US) merge into the <b>US branch via merge-commit PRs</b>; same-US disciplines integrate there — the <b>front Task tests against the back Task</b>. The US branch is a <b>clean delta over production</b> (only its own work).</p>
+      <div class="tracklabel reveal d3" style="color:var(--muted)">One US, many repos — same branch name is the coordination key</div>
       <div class="repos">
         <div class="repo reveal d3"><div class="rn">back-node-classifier</div><div class="rb">ST-1234</div><div class="rt">Task ST-1235 · backend</div></div>
         <div class="repo reveal d4"><div class="rn">front-react-strata-ui</div><div class="rb">ST-1234</div><div class="rt">Task ST-1239 · frontend</div></div>
         <div class="repo reveal d5"><div class="rn">infra-terraform-classifier</div><div class="rb">ST-1234</div><div class="rt">Task ST-1242 · devops</div></div>
       </div>
-      <div class="keynote reveal d6">🔑 <b>Discoverable by name:</b> <code>git branch -r | grep ST-1234</code> finds every piece of the Story, in any repo. That is what makes cherry-picking unnecessary.</div>
+      <div class="keynote reveal d6">🔑 <code>git branch -r | grep ST-1234</code> finds every piece of the US, in any repo. Same name across repos = the cross-repo key.</div>
     </div>
-    <div class="foot">Release = promote the ST-1234 set across all its repos</div>
+    <div class="foot">US = largest release/branch unit · merge-commit, never rebase-merge</div>
   </section>
 
-  <!-- 4 QA ACCUMULATOR -->
+  <!-- 4 TESTING TRACK — qa is a sink -->
   <section class="slide">
     <div class="pad">
-      <div class="eyebrow x-exec reveal d1">The testing track</div>
+      <div class="eyebrow x-exec reveal d1">Testing track</div>
       <h2 class="reveal d2">qa accumulates everything — and never ships</h2>
-      <p class="lead reveal d2">In-flight US branches merge into <code style="color:var(--exec-t)">qa</code> so they're tested together (cross-US, front vs back). <code style="color:var(--exec-t)">qa</code> is a <b>sink</b>: merges flow IN, nothing flows out — <b>it is never merged into production</b>.</p>
+      <p class="lead reveal d2">In-flight US branches <b>merge into <code style="color:var(--exec-t)">qa</code></b> so they're tested together (cross-US, front vs back). <code style="color:var(--exec-t)">qa</code> is a <b>sink</b>: merges flow IN, nothing flows out — <b>it is never merged into production</b>.</p>
       <div class="track reveal d3">
         <span class="lbl" style="color:var(--exec-t)">qa (soup)</span>
         <div class="line">
@@ -230,43 +238,69 @@ h2{font-family:var(--font-display);font-weight:800;font-size:78px;line-height:.9
           <span class="commit s2">M<span class="cap"><b>US ST-1255</b></span></span>
         </div>
       </div>
-      <div class="cmd reveal d4" style="margin-top:64px;">
+      <div class="cmd reveal d4" style="margin-top:60px;">
         <span class="p">$</span> git checkout qa<br>
-        <span class="p">$</span> git merge <span class="k">--no-ff</span> origin/ST-1234 &nbsp;<span class="cm"># merge US branches IN to test</span><br>
+        <span class="p">$</span> git merge <span class="k">--no-ff</span> origin/ST-1234 &nbsp;<span class="cm"># merge US branches IN to test together</span><br>
         <span class="p">$</span> git push origin qa &nbsp;<span class="cm"># deploys the soup to the qa env — NOT a release</span>
       </div>
     </div>
     <div class="foot">qa is a sink · never merged into production · never commit directly to it</div>
   </section>
 
-  <!-- 5 GOLDEN RULE -->
+  <!-- 5 RELEASE TRACK -->
   <section class="slide">
-    <div class="pad" style="display:flex;flex-direction:column;justify-content:center;height:100%;">
-      <div class="eyebrow x-danger reveal d1">The two ground truths</div>
-      <h2 class="reveal d2" style="font-size:96px;">The <span style="color:var(--strat-t)">Story</span> is the release unit.<br><span style="color:var(--danger-t)">There is no cherry-pick.</span></h2>
-      <p class="lead reveal d3" style="font-size:30px;">Every "undo" in this flow is a <b>revert</b> — of a PR, or of the release merge. Drops, rollbacks, hotfixes: all branch-native, all reversible, all with tools the team already uses.</p>
+    <div class="pad">
+      <div class="eyebrow x-bead reveal d1">Release track</div>
+      <h2 class="reveal d2">Assemble a release · ship via pre-main</h2>
+      <p class="lead reveal d2">A disposable <code>release/&lt;cycle&gt;</code> branch is cut from <code>production</code>; only the <b>ready</b> US branches are volcadas in. It's promoted to <code>production</code>, where the <b>pre-main (k8s) gate validates only the release</b> before go-live.</p>
+      <div class="cmd reveal d3">
+        <span class="p">$</span> git checkout production &amp;&amp; git pull<br>
+        <span class="p">$</span> git checkout -b release/2026-06 &nbsp;<span class="cm"># disposable, fresh off production</span><br>
+        <span class="p">$</span> git merge <span class="k">--no-ff</span> origin/ST-1234 &nbsp;<span class="cm"># volcar ONLY ready US branches</span><br>
+        <span class="p">$</span> git merge <span class="k">--no-ff</span> origin/ST-1240<br>
+        <span class="p">$</span> <span class="cm"># merge release/2026-06 → production → pre-main (k8s) validates only the release → approve → live 🚀</span>
+      </div>
+      <div class="keynote reveal d4" style="border-left-color:var(--bead);">📦 The release is assembled from <b>production + the ready US branches</b> — <b>never from <code style="color:var(--bead-t)">qa</code></b>.</div>
+    </div>
+    <div class="foot">release branch is disposable · rebuilt per cycle · qa is not the source</div>
+  </section>
+
+  <!-- 6 WHY QA NEVER CONTAMINATES PRODUCTION -->
+  <section class="slide">
+    <div class="pad">
+      <div class="eyebrow reveal d1">Two tracks, no leaks</div>
+      <h2 class="reveal d2">Why qa never contaminates production</h2>
+      <p class="lead reveal d2"><code style="color:var(--exec-t)">qa</code> is a <b>sink, not a source</b>: you merge US → qa, never the reverse. Each US stays a clean delta over <code>production</code>, so when it ships via the release branch it brings <b>nothing</b> from the soup.</p>
+      <div class="tl reveal d3">
+        <div class="tlrow"><span class="t">1</span><span>US &amp; release branches are <b>cut from production</b> — never from <code>qa</code>.</span></div>
+        <div class="tlrow"><span class="t">2</span><span><b>qa is a sink</b> — merge US → qa, but <b>never</b> merge qa back into a US / release / production branch.</span></div>
+        <div class="tlrow"><span class="t">3</span><span>The <b>release branch is built from production + ready US branches</b> — never from <code>qa</code>.</span></div>
+        <div class="tlrow"><span class="t">4</span><span><b>Sync = <code>git merge production</code></b> into a US branch — never <code>qa</code>.</span></div>
+        <div class="tlrow"><span class="t">5</span><span><b>Integration fixes go to the US/Task branch</b> (then re-merge to qa) — never direct commits to <code>qa</code>.</span></div>
+      </div>
+      <div class="keynote reveal d5" style="border-left-color:var(--danger);">🔴 <b>Inverse gotcha:</b> a fix committed <b>directly to qa</b> (not the US branch) lives in qa but is <b>missing from production</b> when the US ships.</div>
     </div>
   </section>
 
-  <!-- 6 FOUR TRAPS -->
+  <!-- 7 THE FOUR TRAPS -->
   <section class="slide">
     <div class="pad">
-      <div class="eyebrow reveal d1">The four classic traps</div>
+      <div class="eyebrow reveal d1">The classic traps</div>
       <h2 class="reveal d2">…and the one move that beats each</h2>
       <div class="grid2">
         <div class="gcard gc-1 reveal d2"><div class="h">① Drop a US late</div><div class="d">It's in qa and queued for the release.</div><div class="fix">→ <b>Rebuild the release branch</b> without it. qa untouched.</div></div>
-        <div class="gcard gc-2 reveal d3"><div class="h">② Stale Story vs moved prod</div><div class="d">production advanced; the branch is behind.</div><div class="fix">→ <b>git merge production</b> before it ships. Re-validate.</div></div>
-        <div class="gcard gc-3 reveal d4"><div class="h">③ Urgent task in a half-Story</div><div class="d">One piece is needed now, the rest isn't.</div><div class="fix">→ <b>Fix-forward off production</b> as its own PR.</div></div>
-        <div class="gcard gc-4 reveal d5"><div class="h">④ Code shared by two Stories</div><div class="d">Both need the same change.</div><div class="fix">→ Land it <b>first to production</b>; both merge it in.</div></div>
+        <div class="gcard gc-2 reveal d3"><div class="h">② Stale US vs moved prod</div><div class="d">production advanced; the US branch is behind.</div><div class="fix">→ <b>git merge production</b> into the US branch, then re-validate.</div></div>
+        <div class="gcard gc-3 reveal d4"><div class="h">③ Urgent task in a half-done US</div><div class="d">One piece is needed now, the rest isn't.</div><div class="fix">→ <b>Fix-forward off production</b> as its own PR.</div></div>
+        <div class="gcard gc-4 reveal d5"><div class="h">④ Code shared by two US's</div><div class="d">Both need the same change.</div><div class="fix">→ Land it <b>first to production</b>; both pick it up via sync.</div></div>
       </div>
     </div>
     <div class="foot">None of these is ever solved with a cherry-pick</div>
   </section>
 
-  <!-- 7 DROP / ROLLBACK -->
+  <!-- 8 DROP / ROLLBACK -->
   <section class="slide">
     <div class="pad">
-      <div class="eyebrow x-danger reveal d1">Undo = revert</div>
+      <div class="eyebrow x-danger reveal d1">Undo = rebuild / revert</div>
       <h2 class="reveal d2">Drop a US · roll back a release</h2>
       <div class="track reveal d2">
         <span class="lbl" style="color:var(--bead-t)">production</span>
@@ -277,47 +311,47 @@ h2{font-family:var(--font-display);font-weight:800;font-size:78px;line-height:.9
           <span class="commit rev">R<span class="cap" style="color:var(--danger-t)"><b>revert -m 1</b></span></span>
         </div>
       </div>
-      <div class="grid2" style="margin-top:64px;">
-        <div class="gcard gc-3 reveal d3"><div class="h">Drop one US</div><div class="d"><b>Rebuild</b> the release branch = production + the remaining ready US branches. qa untouched (the US keeps testing there).</div></div>
+      <div class="grid2" style="margin-top:60px;">
+        <div class="gcard gc-3 reveal d3"><div class="h">Drop one US</div><div class="d"><b>Rebuild</b> the release branch = <code style="color:var(--text)">production + the remaining ready US branches</code>. qa untouched (the US keeps testing there).</div></div>
         <div class="gcard gc-3 reveal d4"><div class="h">Roll back the whole release</div><div class="d"><code style="color:var(--text)">git revert -m 1 &lt;release merge&gt;</code> + redeploy. A new commit undoes it — no history rewrite.</div></div>
       </div>
-      <div class="keynote reveal d5" style="border-left-color:var(--danger);">🏳️ Without flags, the "off switch" is a <b>revert + redeploy</b> — slower than a flag flip, but the team already knows it.</div>
+      <div class="keynote reveal d5" style="border-left-color:var(--danger);">🏳️ Without flags, the "off switch" is a <b>rebuild or a revert + redeploy</b> — slower than a flag flip, but the team already knows it.</div>
     </div>
   </section>
 
-  <!-- 8 DRIFT / SYNC -->
+  <!-- 9 DRIFT / SYNC -->
   <section class="slide">
     <div class="pad">
       <div class="eyebrow reveal d1">Drift &amp; sync</div>
-      <h2 class="reveal d2">Keep Stories current — merge, not rebase</h2>
+      <h2 class="reveal d2">Keep US branches current — merge, not rebase</h2>
       <div class="tl">
-        <div class="tlrow reveal d2"><span class="t">T0</span><span><b>production = A.</b> Cut ST-1234 (off A); it touches <code style="color:var(--text)">classifier.py</code>.</span></div>
-        <div class="tlrow bad reveal d3"><span class="t">T1</span><span>Hotfix <b>H</b> fixes a bug in <code style="color:var(--text)">classifier.py</code> → production: A → B. <b style="color:var(--danger-t)">ST-1234 doesn't have H — merging now would re-introduce the bug.</b> 🔴</span></div>
+        <div class="tlrow reveal d2"><span class="t">T0</span><span><b>production = A.</b> Cut US ST-1234 (off A); it touches <code style="color:var(--text)">classifier.py</code>.</span></div>
+        <div class="tlrow bad reveal d3"><span class="t">T1</span><span>Hotfix <b>H</b> fixes a bug in <code style="color:var(--text)">classifier.py</code> → production: A → B. <b style="color:var(--danger-t)">ST-1234 doesn't have H — shipping it now would re-introduce the bug.</b> 🔴</span></div>
         <div class="tlrow good reveal d4"><span class="t">T2</span><span>Sync: <code style="color:var(--text)">git merge production</code> into ST-1234 → now = B + my changes, includes H, conflicts resolved here. ✅</span></div>
       </div>
-      <div class="keynote reveal d5">❌ <b>Don't rebase the Story branch</b> — it's shared (Task PRs target it); rebase force-pushes and breaks them. 🟢 <b>Cheapest defense: small, short-lived Stories.</b></div>
+      <div class="keynote reveal d5">❌ <b>Don't rebase the US branch</b> — it's shared (Task PRs target it); rebase force-pushes and breaks them. 🟢 <b>Cheapest defense: small, short-lived US's.</b></div>
     </div>
     <div class="foot">Sync after every release and every hotfix</div>
   </section>
 
-  <!-- 9 READY + OWNERSHIP -->
+  <!-- 10 DEFINITION OF READY + OWNERSHIP -->
   <section class="slide">
     <div class="pad">
       <div class="eyebrow x-bead reveal d1">Definition of Ready · ownership</div>
       <h2 class="reveal d2">Developer prepares · Lead is a gate</h2>
-      <p class="lead reveal d2">A Story is <b>release-ready</b> only when, in every repo it touches, its developer confirms: ① self-contained · ② synced · ③ isolated QA passed · ④ PR green + <code style="color:var(--bead-t)">ready-to-release</code>.</p>
+      <p class="lead reveal d2">A US is <b>release-ready</b> only when, in every repo it touches, its developer confirms: ① self-contained · ② synced (<code>git merge production</code>) · ③ integrated QA passed (validated in <code>qa</code>) · ④ PR(s) green + <code style="color:var(--bead-t)">ready-to-release</code>.</p>
       <div class="own reveal d3">
         <div class="orow ohead"><div>Responsibility</div><div>Owner</div></div>
-        <div class="orow"><div>Keep the Story release-ready (the 4 points), per repo</div><div class="who">Developer</div></div>
+        <div class="orow"><div>Keep the US release-ready (the 4 points), per repo</div><div class="who">Developer</div></div>
         <div class="orow"><div><code>git merge production</code> + resolve conflicts</div><div class="who">Developer</div></div>
-        <div class="orow"><div><b>Verify</b> the Definition of Ready before qa entry</div><div class="who">Eng Lead (gate)</div></div>
-        <div class="orow"><div><b>Pick</b> which ready Stories ship — in any order</div><div class="who">Product + Arch</div></div>
+        <div class="orow"><div><b>Verify</b> readiness before a US is volcada into the release branch</div><div class="who">Eng Lead (gate)</div></div>
+        <div class="orow"><div><b>Pick</b> which ready US's ship — in any order</div><div class="who">Product + Arch</div></div>
       </div>
-      <div class="keynote reveal d5">🎯 Out-of-order is fine: ready Stories wait in a <b>pool</b>; a release picks any subset, any order. The Story is the sum of its per-repo ticks — no central preparer.</div>
+      <div class="keynote reveal d5">🎯 The Lead gates entry to the <b>release branch</b>, not to <code>qa</code> (US branches merge to qa freely to test). Ready US's wait in a <b>pool</b>; a release picks any subset, any order.</div>
     </div>
   </section>
 
-  <!-- 10 CHEAT SHEET -->
+  <!-- 11 CHEAT SHEET -->
   <section class="slide">
     <div class="pad">
       <div class="eyebrow reveal d1">Keep this handy</div>
@@ -331,12 +365,12 @@ h2{font-family:var(--font-display);font-weight:800;font-size:78px;line-height:.9
         <div class="crow"><div>Bug in a US</div><div class="act">Fix-forward (more commits on the US branch)</div></div>
         <div class="crow"><div>Drop a US</div><div class="act">Rebuild the release branch — never cherry-pick</div></div>
         <div class="crow"><div>Bad release in prod</div><div class="act"><code>git revert -m 1 &lt;release merge&gt;</code> + redeploy</div></div>
-        <div class="crow"><div>After each release</div><div class="act"><code>git merge production</code> into in-flight US branches</div></div>
+        <div class="crow"><div>After each release / hotfix</div><div class="act"><code>git merge production</code> into in-flight US branches</div></div>
       </div>
     </div>
   </section>
 
-  <!-- 11 CLOSING -->
+  <!-- 12 CLOSING -->
   <section class="slide">
     <div class="pad closing">
       <div class="eyebrow reveal d1">The rules · JH-06 … JH-13</div>
@@ -361,7 +395,7 @@ h2{font-family:var(--font-display);font-weight:800;font-size:78px;line-height:.9
 <nav class="deck-controls" aria-label="Slide navigation">
   <a href="./index.html" id="homeBtn" title="Back to Engineering Atlas" aria-label="Back to Engineering Atlas">⌂</a>
   <button id="prevBtn" aria-label="Previous slide">‹</button>
-  <span id="counter">01 / 11</span>
+  <span id="counter">01 / 12</span>
   <button id="nextBtn" aria-label="Next slide">›</button>
 </nav>
 
