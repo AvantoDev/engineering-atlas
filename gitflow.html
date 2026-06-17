@@ -73,7 +73,7 @@ h2{font-family:var(--font-display);font-weight:800;font-size:72px;line-height:.9
 .mrow:last-child>div{border-bottom:none}
 .mhead>div{background:rgba(255,255,255,.05);font-size:15px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);}
 .mrow .j{font-family:var(--font-display);font-weight:700}
-.j-prod{color:var(--bead-t)}.j-story{color:var(--strat-t)}.j-qa{color:var(--exec-t)}.j-rel{color:var(--strat-t)}
+.j-prod{color:var(--bead-t)}.j-story{color:var(--strat-t)}.j-task{color:var(--epic-t)}.j-qa{color:var(--exec-t)}.j-rel{color:var(--strat-t)}
 .mrow code{color:var(--text);font-size:18px}
 .mrow b{color:var(--text);font-weight:500}
 
@@ -145,7 +145,7 @@ h2{font-family:var(--font-display);font-weight:800;font-size:72px;line-height:.9
       <h1 class="reveal d2">Git <span class="g">Flow</span></h1>
       <p class="lead reveal d3">How to work the Strata branch flow — <b>day by day</b>. Keep this open as your reference: you are the one who keeps the flow healthy.</p>
       <div class="chips">
-        <span class="chip reveal d4"><b>Your branch</b> = your work</span>
+        <span class="chip reveal d4"><b>US branch</b> = shared · <b>Task</b> = yours</span>
         <span class="chip reveal d4"><b>qa</b> = test only</span>
         <span class="chip reveal d5"><b>production</b> = what's live</span>
         <span class="chip no reveal d6">✕ never cherry-pick</span>
@@ -178,13 +178,13 @@ h2{font-family:var(--font-display);font-weight:800;font-size:72px;line-height:.9
       <p class="lead reveal d2">Everything you build lives on <b>your User Story branch</b>. From there it goes <b>two separate ways</b> — one to <b>test</b>, one to <b>ship</b>. They never mix.</p>
       <div class="tracklabel reveal d3" style="color:var(--exec-t)">① To TEST — merge into qa</div>
       <div class="flow">
-        <div class="fnode story reveal d3"><div class="fn">your branch · ST-1234</div><div class="fl">your Story's work</div></div>
+        <div class="fnode story reveal d3"><div class="fn">US branch · ST-1234</div><div class="fl">the Story — shared</div></div>
         <div class="farrow reveal d3">merge →</div>
         <div class="fnode qa reveal d3"><div class="fn">qa</div><div class="fl">test everything together · never goes to production</div></div>
       </div>
       <div class="tracklabel reveal d4" style="color:var(--strat-t)">② To SHIP — into the release (the Lead does this)</div>
       <div class="flow">
-        <div class="fnode story reveal d4"><div class="fn">your branch · ST-1234</div><div class="fl">when it's ready</div></div>
+        <div class="fnode story reveal d4"><div class="fn">US branch · ST-1234</div><div class="fl">when it's ready</div></div>
         <div class="farrow reveal d4">→</div>
         <div class="fnode reveal d4" style="border-color:rgba(91,141,239,.6)"><div class="fn" style="color:var(--strat-t)">release branch</div><div class="fl">only ready Stories</div></div>
         <div class="farrow reveal d5">→</div>
@@ -199,17 +199,18 @@ h2{font-family:var(--font-display);font-weight:800;font-size:72px;line-height:.9
   <section class="slide">
     <div class="pad">
       <div class="eyebrow reveal d1">Know your branches</div>
-      <h2 class="reveal d2">The four branches</h2>
+      <h2 class="reveal d2">The five branches</h2>
       <div class="map reveal d2">
-        <div class="mrow mhead"><div>Branch</div><div>What it is</div><div>What you do with it</div></div>
-        <div class="mrow"><div class="j j-prod">production</div><div>What's live in front of users.</div><div><b>Never</b> push to it directly. You cut your branch <b>from</b> it.</div></div>
-        <div class="mrow"><div class="j j-story"><code>ST-1234</code><br>(your US branch)</div><div>Your User Story's work — the home of all its Tasks.</div><div>You <b>create</b> it and <b>PR your Tasks into</b> it.</div></div>
-        <div class="mrow"><div class="j j-qa">qa</div><div>Everyone's in-flight work, merged together to test.</div><div>You <b>merge your branch in to test</b>. It <b>never</b> ships.</div></div>
-        <div class="mrow"><div class="j j-rel"><code>release/&lt;cycle&gt;</code></div><div>What ships this release — only the ready Stories.</div><div>The <b>Engineering Lead</b> builds it. You don't touch it.</div></div>
+        <div class="mrow mhead"><div>Branch</div><div>What it is · who owns it</div><div>What you do</div></div>
+        <div class="mrow"><div class="j j-prod">production</div><div>What's live. Owned by DevOps / Tech Lead.</div><div><b>Never</b> push directly. Branches are cut <b>from</b> it.</div></div>
+        <div class="mrow"><div class="j j-story"><code>ST-1234</code><br>US branch</div><div>The <b>Story's</b> branch (per repo) — <b>shared by the Story team</b>. Readiness owned by the <b>mentor</b> → Tech Lead.</div><div>If it <b>doesn't exist, the first dev creates it from production</b>; if it <b>exists, reuse that one</b>.</div></div>
+        <div class="mrow"><div class="j j-task"><code>ST-1235-…</code><br>Task branch</div><div>Your single Task — <b>owned by you</b>, the dev.</div><div>Branch it off the US branch; <b>PR it into</b> the US branch.</div></div>
+        <div class="mrow"><div class="j j-qa">qa</div><div>Everyone's work, deployed to test together. Shared.</div><div>Merge the US branch in to <b>test</b>. It <b>never</b> ships.</div></div>
+        <div class="mrow"><div class="j j-rel"><code>release/&lt;cycle&gt;</code></div><div>What ships this cycle. Owned by the <b>Eng Lead</b>.</div><div>You don't touch it.</div></div>
       </div>
-      <div class="keynote reveal d4">Cut everything <b>from <code>production</code></b>. Test <b>in <code>qa</code></b>. Ship <b>via the release branch</b>. That's the map.</div>
+      <div class="keynote reveal d4">🔑 The <b>US branch is shared</b> (the whole Story team); your <b>Task branch is yours</b>. The first dev to take a Task creates the US branch — everyone else <b>reuses</b> it.</div>
     </div>
-    <div class="foot">production = live · your branch = your work · qa = test · release = what ships</div>
+    <div class="foot">production · US branch (shared, per repo) · Task branch (yours) · qa · release</div>
   </section>
 
   <!-- 5 BRANCH GRAPH -->
@@ -217,12 +218,12 @@ h2{font-family:var(--font-display);font-weight:800;font-size:72px;line-height:.9
     <div class="pad">
       <div class="eyebrow reveal d1">The picture</div>
       <h2 class="reveal d2">One branch, two destinations</h2>
-      <div class="graph reveal d2"><span class="gp">production</span> ──cut──► <span class="gs">your branch ST-1234</span> ┤   ← your Tasks (PRs) merge in here = the gate
-                                        │
-                                        ├──►  <span class="gq">qa</span>               · test only · never goes to production
-                                        │
-                                        └──►  <span class="gs">release/&lt;cycle&gt;</span>  ──►  <span class="gp">production</span>   · only ready Stories</div>
-      <div class="keynote reveal d3">🧪 The arrow into <code>qa</code> is a <b>dead end</b> — testing only. 📦 Only the <b>release branch</b> reaches <code>production</code>. Your branch is the single source that feeds both.</div>
+      <div class="graph reveal d2"><span class="gp">production</span> ──cut──► <span class="gs">US branch ST-1234</span> ┤  ← Tasks (PRs) merge in · shared by the Story
+                                      │
+                                      ├──►  <span class="gq">qa</span>               · test only · never goes to production
+                                      │
+                                      └──►  <span class="gs">release/&lt;cycle&gt;</span>  ──►  <span class="gp">production</span>   · only ready Stories</div>
+      <div class="keynote reveal d3">🧪 The arrow into <code>qa</code> is a <b>dead end</b> — testing only. 📦 Only the <b>release branch</b> reaches <code>production</code>. The US branch is the single source that feeds both.</div>
     </div>
     <div class="foot">Read it left to right: where your branch comes from, and where it goes</div>
   </section>
@@ -234,7 +235,7 @@ h2{font-family:var(--font-display);font-weight:800;font-size:72px;line-height:.9
       <h2 class="reveal d2">Let's follow one Story: ST-1234</h2>
       <p class="lead reveal d2">A real example, day by day — so you can repeat it on your own work. Five moments, start to ship:</p>
       <div class="tl reveal d3">
-        <div class="tlrow"><span class="t" style="color:var(--strat-t)">Day 1</span><span><b>Start.</b> Create your branch and begin your Tasks.</span></div>
+        <div class="tlrow"><span class="t" style="color:var(--strat-t)">Day 1</span><span><b>Start.</b> Find or create the shared US branch; branch your Task off it.</span></div>
         <div class="tlrow"><span class="t" style="color:var(--exec-t)">Day 2</span><span><b>Test.</b> Merge your branch into <code>qa</code> and test it with everyone else's.</span></div>
         <div class="tlrow"><span class="t" style="color:var(--exec-t)">Day 3</span><span><b>Sync.</b> A release shipped — pull <code>production</code> into your branch.</span></div>
         <div class="tlrow"><span class="t" style="color:var(--bead-t)">Day 4</span><span><b>Ready.</b> Tests pass — mark it <code>ready-to-release</code>. You're done.</span></div>
@@ -248,17 +249,18 @@ h2{font-family:var(--font-display);font-weight:800;font-size:72px;line-height:.9
   <section class="slide">
     <div class="pad">
       <div class="eyebrow reveal d1"><span class="day">Day 1</span> Start your work</div>
-      <h2 class="reveal d2">Create your branch, start your Tasks</h2>
-      <p class="lead reveal d2">A User Story (ST-1234) is assigned to you. Cut your <b>US branch from <code>production</code></b> — this branch is your gate. Then work each Task on its own branch and <b>PR it into your US branch</b>.</p>
+      <h2 class="reveal d2">Find or create the Story branch</h2>
+      <p class="lead reveal d2">You pick up a Task in Story ST-1234. First, the <b>US branch</b> (<code>ST-1234</code>) — it's <b>shared by the whole Story team</b>. <b>Does it exist?</b> If yes, <b>reuse it</b>; if a teammate hasn't made it yet, you create it from <code>production</code>. Then branch <b>your</b> Task off it.</p>
       <div class="cmd reveal d3">
-        <span class="p">$</span> git checkout production &amp;&amp; git pull<br>
-        <span class="p">$</span> git checkout -b <span class="k">ST-1234</span> &nbsp;<span class="cm"># your US branch — same name in every repo it touches</span><br>
-        <span class="p">$</span> git checkout -b <span class="k">ST-1235-backend</span> &nbsp;<span class="cm"># a Task branch off your US branch</span><br>
-        <span class="p">$</span> gh pr create --base <span class="k">ST-1234</span> &nbsp;<span class="cm"># PR the Task INTO your US branch (merge-commit)</span>
+        <span class="p">$</span> git fetch origin<br>
+        <span class="p">$</span> git switch <span class="k">ST-1234</span> &nbsp;<span class="cm"># reuse it if it already exists…</span><br>
+        <span class="p">$</span> <span class="cm"># …or create it ONLY if it doesn't:</span> git switch -c <span class="k">ST-1234</span> origin/production<br>
+        <span class="p">$</span> git switch -c <span class="k">ST-1235-backend</span> &nbsp;<span class="cm"># YOUR Task branch, off the US branch</span><br>
+        <span class="p">$</span> gh pr create --base <span class="k">ST-1234</span> &nbsp;<span class="cm"># PR your Task INTO the shared US branch (merge-commit)</span>
       </div>
-      <div class="keynote reveal d4">Tasks merge <b>into your US branch</b>. The frontend Task and the backend Task of the same Story <b>integrate and test right here</b>, on your branch.</div>
+      <div class="keynote reveal d4">The <b>US branch is the Story's</b> (shared) — <b>never create a second one</b> if it exists. Your <b>Task branch is yours</b>. Its readiness is owned by the <b>mentor</b> (Rey Rivero / Faizan Pervaz / Ateeb Tasser), then the Tech Lead.</div>
     </div>
-    <div class="foot">Day 1 · cut ST-1234 from production · PR your Tasks into it</div>
+    <div class="foot">Day 1 · reuse ST-1234 (or create from production) · branch your Task off it</div>
   </section>
 
   <!-- 8 DAY 2 -->
@@ -266,10 +268,10 @@ h2{font-family:var(--font-display);font-weight:800;font-size:72px;line-height:.9
     <div class="pad">
       <div class="eyebrow x-exec reveal d1"><span class="day" style="background:var(--exec);color:#1a1206">Day 2</span> Test it in qa</div>
       <h2 class="reveal d2">Merge into qa to test together</h2>
-      <p class="lead reveal d2">Your Tasks are in. Now test the whole Story <b>integrated with everyone else's work</b> — merge your US branch into <code style="color:var(--exec-t)">qa</code> and it deploys to the QA environment.</p>
+      <p class="lead reveal d2">Your Task is merged into the US branch. Now test the Story <b>integrated with everyone else's work</b> — merge the <b>US branch</b> into <code style="color:var(--exec-t)">qa</code>; it deploys to the QA environment (where, e.g., the frontend runs against the backend already live in qa).</p>
       <div class="cmd reveal d3">
         <span class="p">$</span> git checkout qa &amp;&amp; git pull<br>
-        <span class="p">$</span> git merge <span class="k">--no-ff</span> ST-1234 &nbsp;<span class="cm"># bring your branch IN to test</span><br>
+        <span class="p">$</span> git merge <span class="k">--no-ff</span> ST-1234 &nbsp;<span class="cm"># bring the US branch IN to test</span><br>
         <span class="p">$</span> git push origin qa &nbsp;<span class="cm"># deploys to the QA environment</span>
       </div>
       <div class="keynote reveal d4" style="border-left-color:var(--exec);">⚠️ <code>qa</code> is the shared <b>test</b> environment — it <b>never goes to production</b>. Found a bug? Fix it <b>on your US branch</b> and merge again. <b>Never commit a fix directly to <code>qa</code></b> (it would be in qa but missing from production).</div>
@@ -297,16 +299,16 @@ h2{font-family:var(--font-display);font-weight:800;font-size:72px;line-height:.9
     <div class="pad">
       <div class="eyebrow x-bead reveal d1"><span class="day" style="background:var(--bead);color:#04140b">Day 4</span> Mark it ready</div>
       <h2 class="reveal d2">Ready means ready — then you're done</h2>
-      <p class="lead reveal d2">Your Story works and tests pass in <code>qa</code>. Mark it <b>release-ready</b>. The Engineering Lead checks these four things before it can ship:</p>
+      <p class="lead reveal d2">The Story is <b>release-ready</b> when these four hold. The <b>mentor</b> (Rey Rivero / Faizan Pervaz / Ateeb Tasser) owns the US branch's readiness — sync, conflicts, marking it ready; the <b>Tech Lead</b> is the final escalation:</p>
       <div class="tl reveal d3">
         <div class="tlrow"><span class="t">①</span><span><b>Self-contained</b> — only this Story's work; no dependency on an unreleased Story.</span></div>
         <div class="tlrow"><span class="t">②</span><span><b>Synced</b> — <code>git merge production</code> is up to date.</span></div>
         <div class="tlrow"><span class="t">③</span><span><b>Tested</b> — validated integrated in <code>qa</code>.</span></div>
         <div class="tlrow"><span class="t">④</span><span><b>Green</b> — PRs pass + label <code style="color:var(--bead-t)">ready-to-release</code>.</span></div>
       </div>
-      <div class="keynote reveal d4">🎯 Your job ends here. You do <b>not</b> assemble or promote the release — the Lead does. If your Story isn't ready, it simply waits for the next one.</div>
+      <div class="keynote reveal d4">🎯 You own <b>your Task</b>. The <b>mentor owns the Story branch</b> and hands it to the release — you don't assemble or promote. If the Story isn't ready, it simply waits for the next release.</div>
     </div>
-    <div class="foot">Day 4 · all four points green · label ready-to-release · hand off to the Lead</div>
+    <div class="foot">Day 4 · all four green · the mentor marks it ready &amp; hands it to the release</div>
   </section>
 
   <!-- 11 RELEASE DAY -->
@@ -338,21 +340,21 @@ h2{font-family:var(--font-display);font-weight:800;font-size:72px;line-height:.9
         <div class="gcard gc-4 reveal d2">
           <div class="h" style="color:var(--bead-t)">✅ Always</div>
           <ul class="do">
-            <li><b>Cut</b> your branch <b>from <code>production</code></b></li>
-            <li><b>PR your Tasks into your US branch</b> (merge-commit)</li>
-            <li><b>Merge your branch → <code>qa</code></b> only to test</li>
-            <li><b>Sync</b> with <code>git merge production</code> after releases</li>
-            <li><b>Fix bugs on your branch</b>, then merge again</li>
+            <li><b>Reuse</b> the Story's US branch — create from <code>production</code> only if missing</li>
+            <li><b>PR your Task into the US branch</b> (merge-commit)</li>
+            <li><b>Merge the US branch → <code>qa</code></b> only to test</li>
+            <li><b>Sync</b> the US branch with <code>git merge production</code></li>
+            <li><b>Fix bugs on the branch</b>, then merge again</li>
           </ul>
         </div>
         <div class="gcard gc-3 reveal d3">
           <div class="h" style="color:var(--danger-t)">❌ Never</div>
           <ul class="dont">
             <li>Push to <code>production</code>, or cut a branch from <code>qa</code></li>
-            <li><b>Merge <code>qa</code></b> into your branch or production</li>
+            <li><b>Create a second US branch</b> if one already exists</li>
+            <li><b>Merge <code>qa</code></b> into a US / release / production branch</li>
             <li><b>Commit a fix directly to <code>qa</code></b></li>
-            <li><b>Rebase</b> your US branch (use <code>merge</code>)</li>
-            <li><b>cherry-pick</b> anything</li>
+            <li><b>Rebase</b> the US branch · <b>cherry-pick</b> anything</li>
           </ul>
         </div>
       </div>
@@ -382,7 +384,7 @@ h2{font-family:var(--font-display);font-weight:800;font-size:72px;line-height:.9
       <h2 class="reveal d2">What do I do? — one line each</h2>
       <div class="cheat reveal d2">
         <div class="crow chead"><div>I want to…</div><div>Do this</div></div>
-        <div class="crow"><div>Start a Story</div><div class="act"><code>git checkout production &amp;&amp; git checkout -b ST-1234</code></div></div>
+        <div class="crow"><div>Start / join a Story</div><div class="act"><code>git switch ST-1234</code> — or, only if missing, <code>git switch -c ST-1234 origin/production</code></div></div>
         <div class="crow"><div>Add a Task</div><div class="act">Branch off ST-1234 → PR it <b>into ST-1234</b> (merge-commit)</div></div>
         <div class="crow"><div>Test my Story</div><div class="act"><code>git checkout qa &amp;&amp; git merge --no-ff ST-1234 &amp;&amp; git push</code></div></div>
         <div class="crow"><div>Fix a bug</div><div class="act">More commits on <b>ST-1234</b> → merge to qa again</div></div>
