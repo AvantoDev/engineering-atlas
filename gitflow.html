@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Git Flow — Strata (ST)</title>
+<title>Git Flow — Developer Guide · Strata (ST)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -18,7 +18,6 @@
   --stage-bg:#04060d; --ease:cubic-bezier(.16,1,.3,1);
 }
 *{margin:0;padding:0;box-sizing:border-box;}
-/* fixed-stage base */
 html,body{width:100%;height:100%;margin:0;overflow:hidden;background:var(--stage-bg,#000);}
 .deck-viewport{position:fixed;inset:0;overflow:hidden;background:var(--stage-bg,#000);}
 .deck-stage{position:absolute;left:0;top:0;width:1920px;height:1080px;overflow:hidden;transform-origin:0 0;background:var(--slide-bg,#fff);}
@@ -28,67 +27,66 @@ img,svg{max-width:100%;max-height:100%;}
 @media print{html,body{width:1920px;height:auto;overflow:visible;background:#fff;}.deck-viewport{position:static;overflow:visible;}.deck-stage{position:static;width:auto;height:auto;transform:none!important;}.slide{position:relative;display:block!important;visibility:visible!important;opacity:1!important;width:1920px;height:1080px;break-after:page;}}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.2s!important;}}
 
-/* canvas atmosphere */
+/* canvas */
 .slide{background:radial-gradient(120% 90% at 10% -5%,rgba(91,141,239,.18),transparent 52%),radial-gradient(120% 95% at 95% 108%,rgba(224,163,94,.15),transparent 52%),var(--bg);font-family:var(--font-mono);color:var(--text);}
 .slide::before{content:"";position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(120,150,210,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(120,150,210,.05) 1px,transparent 1px);background-size:60px 60px;mask-image:linear-gradient(180deg,transparent,#000 20%,#000 86%,transparent);}
-.pad{position:absolute;top:80px;left:130px;right:130px;bottom:80px;}
+.pad{position:absolute;top:78px;left:130px;right:130px;bottom:78px;}
 
 /* chrome */
-.eyebrow{font-size:20px;letter-spacing:.28em;text-transform:uppercase;color:var(--strat-t);}
+.eyebrow{font-size:19px;letter-spacing:.26em;text-transform:uppercase;color:var(--strat-t);}
 .eyebrow.x-exec{color:var(--exec-t)}.eyebrow.x-danger{color:var(--danger-t)}.eyebrow.x-bead{color:var(--bead-t)}
-h2{font-family:var(--font-display);font-weight:800;font-size:78px;line-height:.98;letter-spacing:-.02em;margin-top:16px;}
-.lead{font-size:28px;line-height:1.5;color:var(--muted);max-width:1320px;margin-top:22px;}
+.eyebrow .day{display:inline-block;background:var(--strat);color:#06101f;font-weight:700;border-radius:6px;padding:2px 12px;margin-right:14px;letter-spacing:.1em;}
+h2{font-family:var(--font-display);font-weight:800;font-size:72px;line-height:.98;letter-spacing:-.02em;margin-top:14px;}
+.lead{font-size:27px;line-height:1.5;color:var(--muted);max-width:1340px;margin-top:20px;}
 .lead b{color:var(--text);font-weight:500;}
-.lead code,.keynote code,.crow code,.cmd code{font-family:var(--font-mono);}
-.tracklabel{font-size:17px;letter-spacing:.2em;text-transform:uppercase;margin-top:30px;}
-.foot{position:absolute;left:130px;bottom:38px;font-size:15px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);}
+.lead code,.keynote code,.crow code,.cmd code,.map code,.orow code,.do code,.dont code,.gcard code{font-family:var(--font-mono);}
+.tracklabel{font-size:16px;letter-spacing:.2em;text-transform:uppercase;margin-top:26px;}
+.foot{position:absolute;left:130px;bottom:36px;font-size:15px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);}
 
-/* TITLE */
-.title h1{font-family:var(--font-display);font-weight:800;font-size:150px;line-height:.9;letter-spacing:-.025em;margin-top:54px;}
+/* title */
+.title h1{font-family:var(--font-display);font-weight:800;font-size:142px;line-height:.9;letter-spacing:-.025em;margin-top:50px;}
 .title h1 .g{background:linear-gradient(100deg,var(--strat),var(--exec));-webkit-background-clip:text;background-clip:text;color:transparent;}
-.title .lead{font-size:32px;max-width:1180px;}
-.title .chips{display:flex;gap:14px;margin-top:44px;flex-wrap:wrap;}
-.chip{font-size:18px;padding:12px 20px;border-radius:999px;border:1.5px solid var(--line);color:var(--muted);}
+.title .lead{font-size:31px;max-width:1180px;}
+.title .chips{display:flex;gap:14px;margin-top:42px;flex-wrap:wrap;}
+.chip{font-size:18px;padding:11px 20px;border-radius:999px;border:1.5px solid var(--line);color:var(--muted);}
 .chip b{color:var(--text);font-weight:500;}
 .chip.no{border-color:rgba(224,103,106,.5);color:var(--danger-t);}
 
-/* node/arrow flow */
+/* flow nodes */
 .flow{display:flex;align-items:stretch;gap:0;margin-top:14px;flex-wrap:wrap;}
-.fnode{flex:1;min-width:150px;border:1.5px solid var(--line);border-radius:14px;padding:24px 20px;background:var(--panel);text-align:center;}
-.fnode .fn{font-family:var(--font-display);font-weight:800;font-size:28px;}
-.fnode .fl{font-size:15px;color:var(--muted);margin-top:8px;line-height:1.4;}
+.fnode{flex:1;min-width:150px;border:1.5px solid var(--line);border-radius:14px;padding:22px 18px;background:var(--panel);text-align:center;}
+.fnode .fn{font-family:var(--font-display);font-weight:800;font-size:27px;}
+.fnode .fl{font-size:15px;color:var(--muted);margin-top:7px;line-height:1.4;}
 .fnode.prod{border-color:rgba(60,194,121,.6)}.fnode.prod .fn{color:var(--bead-t)}
 .fnode.story{border-color:rgba(91,141,239,.6)}.fnode.story .fn{color:var(--strat-t)}
 .fnode.qa{border-color:rgba(224,163,94,.6)}.fnode.qa .fn{color:var(--exec-t)}
-.farrow{display:flex;align-items:center;color:var(--muted);font-size:24px;padding:0 16px;white-space:nowrap;}
+.farrow{display:flex;align-items:center;color:var(--muted);font-size:22px;padding:0 14px;white-space:nowrap;}
 
-/* commit track */
-.track{position:relative;margin-top:30px;padding:34px 20px 14px;}
-.track .lbl{position:absolute;left:0;top:-2px;font-size:17px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);}
-.line{display:flex;align-items:center;gap:0;}
-.commit{width:34px;height:34px;border-radius:50%;border:2px solid var(--line);background:#0c1426;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--muted);flex:0 0 auto;position:relative;}
-.seg{height:2px;background:var(--line);flex:1;min-width:30px;}
-.commit.base{border-color:var(--bead);color:var(--bead-t)}
-.commit.s1{border-color:var(--strat);color:var(--strat-t)}
-.commit.s2{border-color:var(--exec);color:var(--exec-t)}
-.commit.rev{border-color:var(--danger);color:var(--danger-t)}
-.commit.rev::after{content:"";position:absolute;width:46px;height:2px;background:var(--danger);transform:rotate(-45deg);}
-.commit .cap{position:absolute;top:42px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:15px;color:var(--muted);}
-.commit .cap b{color:var(--text);font-weight:500;}
+/* graph */
+.graph{margin-top:30px;border:1.5px solid var(--line);border-radius:12px;background:rgba(4,7,15,.6);padding:32px 36px;font-family:var(--font-mono);font-size:23px;line-height:2.1;white-space:pre;color:var(--muted);overflow-x:auto;}
+.graph .gp{color:var(--bead-t);font-weight:600}.graph .gs{color:var(--strat-t);font-weight:600}.graph .gq{color:var(--exec-t);font-weight:600}
 
 /* mapping table */
-.map{margin-top:30px;border:1.5px solid var(--line);border-radius:14px;overflow:hidden;}
-.mrow{display:grid;grid-template-columns:1fr 1.2fr 1.4fr;}
-.mrow>div{padding:16px 28px;border-bottom:1px solid var(--line);font-size:20px;}
+.map{margin-top:26px;border:1.5px solid var(--line);border-radius:14px;overflow:hidden;}
+.mrow{display:grid;grid-template-columns:1fr 1.7fr 1.5fr;}
+.mrow>div{padding:18px 28px;border-bottom:1px solid var(--line);font-size:20px;line-height:1.4;}
 .mrow:last-child>div{border-bottom:none}
 .mhead>div{background:rgba(255,255,255,.05);font-size:15px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);}
 .mrow .j{font-family:var(--font-display);font-weight:700}
-.j-epic{color:var(--epic-t)}.j-story{color:var(--strat-t)}.j-task{color:var(--exec-t)}.j-bead{color:var(--bead-t)}
+.j-prod{color:var(--bead-t)}.j-story{color:var(--strat-t)}.j-qa{color:var(--exec-t)}.j-rel{color:var(--strat-t)}
 .mrow code{color:var(--text);font-size:18px}
+.mrow b{color:var(--text);font-weight:500}
 
-/* 2x2 / grids */
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-top:40px;}
-.gcard{border:1.5px solid var(--line);border-left-width:5px;border-radius:14px;padding:28px 30px;background:var(--panel);}
+/* command block */
+.cmd{margin-top:24px;border:1.5px solid var(--line);border-radius:12px;background:rgba(4,7,15,.6);padding:24px 28px;font-size:21px;line-height:1.8;}
+.cmd .c{color:var(--bead-t)}.cmd .p{color:var(--muted)}.cmd .k{color:var(--exec-t)}.cmd .cm{color:var(--muted);font-style:italic}
+
+/* keynote / cards */
+.keynote{margin-top:26px;font-size:22px;line-height:1.5;border-left:4px solid var(--strat);padding-left:22px;color:var(--muted)}
+.keynote b{color:var(--text);font-weight:500}
+.keynote code{color:var(--strat-t)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-top:36px;}
+.gcard{border:1.5px solid var(--line);border-left-width:5px;border-radius:14px;padding:26px 30px;background:var(--panel);}
 .gcard .h{font-family:var(--font-display);font-weight:700;font-size:26px;}
 .gcard .d{font-size:20px;line-height:1.5;color:var(--muted);margin-top:12px;}
 .gcard .d b{color:var(--text);font-weight:500}
@@ -96,57 +94,37 @@ h2{font-family:var(--font-display);font-weight:800;font-size:78px;line-height:.9
 .gc-1{border-left-color:var(--exec)}.gc-2{border-left-color:var(--strat)}.gc-3{border-left-color:var(--danger)}.gc-4{border-left-color:var(--bead)}
 .gc-1 .h{color:var(--exec-t)}.gc-2 .h{color:var(--strat-t)}.gc-3 .h{color:var(--danger-t)}.gc-4 .h{color:var(--bead-t)}
 
-/* command block */
-.cmd{margin-top:26px;border:1.5px solid var(--line);border-radius:12px;background:rgba(4,7,15,.6);padding:24px 28px;font-size:21px;line-height:1.75;}
-.cmd .c{color:var(--bead-t)}.cmd .p{color:var(--muted)}.cmd .k{color:var(--exec-t)}.cmd .cm{color:var(--muted);font-style:italic}
-
-/* multi-repo */
-.repos{display:flex;gap:22px;margin-top:14px;}
-.repo{flex:1;border:1.5px solid rgba(91,141,239,.4);border-radius:14px;padding:24px;background:var(--panel);}
-.repo .rn{font-family:var(--font-mono);font-size:17px;color:var(--muted);}
-.repo .rb{font-family:var(--font-display);font-weight:700;font-size:28px;color:var(--strat-t);margin-top:8px;}
-.repo .rt{font-size:16px;color:var(--muted);margin-top:8px;line-height:1.4}
-.keynote{margin-top:28px;font-size:22px;line-height:1.5;border-left:4px solid var(--strat);padding-left:22px;color:var(--muted)}
-.keynote b{color:var(--text);font-weight:500}
-.keynote code{color:var(--strat-t)}
-
-/* timeline / numbered list */
-.tl{margin-top:30px;display:flex;flex-direction:column;gap:16px;}
+/* numbered list / timeline */
+.tl{margin-top:26px;display:flex;flex-direction:column;gap:15px;}
 .tlrow{display:flex;gap:20px;align-items:flex-start;font-size:22px;line-height:1.45;color:var(--muted)}
-.tlrow .t{font-family:var(--font-display);font-weight:800;font-size:24px;color:var(--strat-t);flex:0 0 56px}
+.tlrow .t{font-family:var(--font-display);font-weight:800;font-size:23px;color:var(--strat-t);flex:0 0 92px}
 .tlrow.bad .t{color:var(--danger-t)}.tlrow.good .t{color:var(--bead-t)}
-.tlrow b{color:var(--text);font-weight:500}
-.tlrow code{color:var(--strat-t)}
+.tlrow b{color:var(--text);font-weight:500}.tlrow code{color:var(--strat-t)}
 
-/* ownership */
-.own{margin-top:30px;border:1.5px solid var(--line);border-radius:14px;overflow:hidden}
-.orow{display:grid;grid-template-columns:1.7fr 1fr}
-.orow>div{padding:17px 28px;border-bottom:1px solid var(--line);font-size:21px}
-.orow:last-child>div{border-bottom:none}
-.ohead>div{background:rgba(255,255,255,.05);font-size:15px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
-.orow .who{font-family:var(--font-display);font-weight:700;color:var(--exec-t)}
-.orow code{color:var(--text)}
+/* do / dont */
+.do,.dont{list-style:none;margin-top:10px;}
+.do li,.dont li{font-size:21px;line-height:1.5;margin:13px 0;color:var(--muted);padding-left:34px;position:relative;}
+.do li::before{content:"✓";position:absolute;left:0;color:var(--bead-t);font-weight:700;}
+.dont li::before{content:"✕";position:absolute;left:0;color:var(--danger-t);font-weight:700;}
+.do li b,.dont li b{color:var(--text);font-weight:500;}
 
-/* cheat table */
-.cheat{margin-top:26px;border:1.5px solid var(--line);border-radius:14px;overflow:hidden}
-.crow{display:grid;grid-template-columns:1fr 1.4fr}
-.crow>div{padding:15px 28px;border-bottom:1px solid var(--line);font-size:20px}
+/* cheat */
+.cheat{margin-top:24px;border:1.5px solid var(--line);border-radius:14px;overflow:hidden}
+.crow{display:grid;grid-template-columns:1fr 1.5fr}
+.crow>div{padding:14px 28px;border-bottom:1px solid var(--line);font-size:20px}
 .crow:last-child>div{border-bottom:none}
 .chead>div{background:rgba(255,255,255,.05);font-size:15px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
 .crow .act{color:var(--text)}.crow .act code{color:var(--bead-t)}
 
 /* closing */
 .closing{display:flex;flex-direction:column;justify-content:center;height:100%}
-.closing h2{font-size:100px}
+.closing h2{font-size:92px}
 .closing .g{background:linear-gradient(100deg,var(--strat),var(--exec));-webkit-background-clip:text;background-clip:text;color:transparent}
-.rules{margin-top:34px;display:grid;grid-template-columns:1fr 1fr;gap:14px 50px;max-width:1520px}
-.rule{font-size:20px;color:var(--muted);border-left:3px solid var(--strat);padding-left:16px;line-height:1.4}
-.rule b{color:var(--text);font-weight:600}
 
 /* reveal */
 .reveal{opacity:0;transform:translateY(28px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
 .slide.visible .reveal{opacity:1;transform:none}
-.slide.visible .d1{transition-delay:.08s}.slide.visible .d2{transition-delay:.2s}.slide.visible .d3{transition-delay:.32s}.slide.visible .d4{transition-delay:.44s}.slide.visible .d5{transition-delay:.56s}.slide.visible .d6{transition-delay:.68s}.slide.visible .d7{transition-delay:.8s}
+.slide.visible .d1{transition-delay:.06s}.slide.visible .d2{transition-delay:.16s}.slide.visible .d3{transition-delay:.26s}.slide.visible .d4{transition-delay:.36s}.slide.visible .d5{transition-delay:.46s}.slide.visible .d6{transition-delay:.56s}
 
 /* deck chrome */
 .deck-controls{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:1000;display:flex;align-items:center;gap:16px;font-family:var(--font-mono);color:var(--muted);font-size:14px;letter-spacing:.12em;background:rgba(7,11,22,.7);border:1px solid var(--line);border-radius:999px;padding:8px 18px;backdrop-filter:blur(8px)}
@@ -163,231 +141,268 @@ h2{font-family:var(--font-display);font-weight:800;font-size:78px;line-height:.9
   <!-- 1 TITLE -->
   <section class="slide title active">
     <div class="pad">
-      <div class="eyebrow reveal d1">Engineering Atlas · Section</div>
+      <div class="eyebrow reveal d1">Strata (ST) · Developer Guide</div>
       <h1 class="reveal d2">Git <span class="g">Flow</span></h1>
-      <p class="lead reveal d3">How the Jira hierarchy maps to branches — and how we ship Strata <b>without ever cherry-picking</b>. Two tracks; two permanent branches: <b>qa</b> &amp; <b>production</b>.</p>
+      <p class="lead reveal d3">How to work the Strata branch flow — <b>day by day</b>. Keep this open as your reference: you are the one who keeps the flow healthy.</p>
       <div class="chips">
-        <span class="chip reveal d4"><b>US</b> = the release unit</span>
-        <span class="chip reveal d4"><b>qa</b> = a sink, never promoted</span>
-        <span class="chip no reveal d5">✕ no cherry-pick</span>
-        <span class="chip reveal d6">🏳️ no feature flags (yet)</span>
+        <span class="chip reveal d4"><b>Your branch</b> = your work</span>
+        <span class="chip reveal d4"><b>qa</b> = test only</span>
+        <span class="chip reveal d5"><b>production</b> = what's live</span>
+        <span class="chip no reveal d6">✕ never cherry-pick</span>
       </div>
     </div>
-    <div class="foot">Strata (ST) · branch-only · two-track model</div>
+    <div class="foot">Read it · use it as reference · the day-by-day tutorial starts on slide 6</div>
   </section>
 
-  <!-- 2 THE MODEL -->
+  <!-- 2 OBJECTIVE -->
   <section class="slide">
     <div class="pad">
-      <div class="eyebrow reveal d1">The model · two tracks</div>
-      <h2 class="reveal d2">The US branch feeds two tracks</h2>
+      <div class="eyebrow reveal d1">What this guide is for</div>
+      <h2 class="reveal d2">The goal: you, working with confidence</h2>
+      <p class="lead reveal d2">After reading this you will know exactly <b>which branch to create</b>, <b>where your PRs go</b>, <b>how to test your work</b>, and <b>what you must never do</b>. No guessing.</p>
+      <div class="tl reveal d3">
+        <div class="tlrow"><span class="t">🎯 Who</span><span>Every Strata developer — frontend, backend, devops.</span></div>
+        <div class="tlrow"><span class="t">📖 How</span><span>It's a <b>reference</b>: follow the day-by-day once, then keep the <b>Rules</b> and <b>Quick Reference</b> slides handy.</span></div>
+        <div class="tlrow"><span class="t">🧭 Path</span><span>The model → the four branches → a <b>day-by-day tutorial</b> → the rules → what to do if something breaks.</span></div>
+      </div>
+      <div class="keynote reveal d4">There are only <b>two permanent branches</b>: <code style="color:var(--exec-t)">qa</code> (where we test) and <code style="color:var(--bead-t)">production</code> (what's live). Everything else is a short-lived working branch you create.</div>
+    </div>
+    <div class="foot">Objective: teach you how to use the flow — not the theory behind it</div>
+  </section>
 
-      <div class="tracklabel reveal d3" style="color:var(--exec-t)">🧪 Testing track — never ships</div>
+  <!-- 3 THE MODEL -->
+  <section class="slide">
+    <div class="pad">
+      <div class="eyebrow reveal d1">The big idea</div>
+      <h2 class="reveal d2">Your branch goes to two places</h2>
+      <p class="lead reveal d2">Everything you build lives on <b>your User Story branch</b>. From there it goes <b>two separate ways</b> — one to <b>test</b>, one to <b>ship</b>. They never mix.</p>
+      <div class="tracklabel reveal d3" style="color:var(--exec-t)">① To TEST — merge into qa</div>
       <div class="flow">
-        <div class="fnode story reveal d3"><div class="fn">US ST-1234 (gate)</div><div class="fl">Tasks merge in · front vs back</div></div>
+        <div class="fnode story reveal d3"><div class="fn">your branch · ST-1234</div><div class="fl">your Story's work</div></div>
         <div class="farrow reveal d3">merge →</div>
-        <div class="fnode qa reveal d3"><div class="fn">qa</div><div class="fl">integration accumulator · SINK · never promoted</div></div>
+        <div class="fnode qa reveal d3"><div class="fn">qa</div><div class="fl">test everything together · never goes to production</div></div>
       </div>
-
-      <div class="tracklabel reveal d4" style="color:var(--strat-t)">📦 Release track — what ships</div>
+      <div class="tracklabel reveal d4" style="color:var(--strat-t)">② To SHIP — into the release (the Lead does this)</div>
       <div class="flow">
-        <div class="fnode prod reveal d4"><div class="fn">production</div><div class="fl">baseline</div></div>
-        <div class="farrow reveal d4">cut →</div>
-        <div class="fnode reveal d4" style="border-color:rgba(91,141,239,.6)"><div class="fn" style="color:var(--strat-t)">release/2026-06</div><div class="fl">disposable · volcar only ready US</div></div>
+        <div class="fnode story reveal d4"><div class="fn">your branch · ST-1234</div><div class="fl">when it's ready</div></div>
+        <div class="farrow reveal d4">→</div>
+        <div class="fnode reveal d4" style="border-color:rgba(91,141,239,.6)"><div class="fn" style="color:var(--strat-t)">release branch</div><div class="fl">only ready Stories</div></div>
         <div class="farrow reveal d5">→</div>
-        <div class="fnode prod reveal d5"><div class="fn">production 🚀</div><div class="fl">pre-main (k8s) validates only the release</div></div>
+        <div class="fnode prod reveal d5"><div class="fn">production 🚀</div><div class="fl">validated, then live</div></div>
       </div>
-
-      <div class="keynote reveal d5" style="margin-top:32px;">🔑 The same US branch goes <b>both</b> ways: <b>merge → <code>qa</code></b> for testing, and (when ready) <b>volcada → release branch</b> to ship. <code>qa</code> is never on the path to production.</div>
+      <div class="keynote reveal d5">🔑 Same branch, two destinations. <b><code>qa</code> is only for testing — it never reaches production.</b> What ships is the release.</div>
     </div>
-    <div class="foot">Only qa &amp; production are permanent · Task/US/release are ephemeral</div>
+    <div class="foot">Test track and release track are separate — that's the whole trick</div>
   </section>
 
-  <!-- 3 THE GATE + MULTI-REPO -->
+  <!-- 4 THE FOUR BRANCHES -->
   <section class="slide">
     <div class="pad">
-      <div class="eyebrow reveal d1">The gate</div>
-      <h2 class="reveal d2">Task → US branch — the gate</h2>
-      <p class="lead reveal d2">Tasks (the tickets inside a US) merge into the <b>US branch via merge-commit PRs</b>; same-US disciplines integrate there — the <b>front Task tests against the back Task</b>. The US branch is a <b>clean delta over production</b> (only its own work).</p>
-      <div class="tracklabel reveal d3" style="color:var(--muted)">One US, many repos — same branch name is the coordination key</div>
-      <div class="repos">
-        <div class="repo reveal d3"><div class="rn">back-node-classifier</div><div class="rb">ST-1234</div><div class="rt">Task ST-1235 · backend</div></div>
-        <div class="repo reveal d4"><div class="rn">front-react-strata-ui</div><div class="rb">ST-1234</div><div class="rt">Task ST-1239 · frontend</div></div>
-        <div class="repo reveal d5"><div class="rn">infra-terraform-classifier</div><div class="rb">ST-1234</div><div class="rt">Task ST-1242 · devops</div></div>
+      <div class="eyebrow reveal d1">Know your branches</div>
+      <h2 class="reveal d2">The four branches</h2>
+      <div class="map reveal d2">
+        <div class="mrow mhead"><div>Branch</div><div>What it is</div><div>What you do with it</div></div>
+        <div class="mrow"><div class="j j-prod">production</div><div>What's live in front of users.</div><div><b>Never</b> push to it directly. You cut your branch <b>from</b> it.</div></div>
+        <div class="mrow"><div class="j j-story"><code>ST-1234</code><br>(your US branch)</div><div>Your User Story's work — the home of all its Tasks.</div><div>You <b>create</b> it and <b>PR your Tasks into</b> it.</div></div>
+        <div class="mrow"><div class="j j-qa">qa</div><div>Everyone's in-flight work, merged together to test.</div><div>You <b>merge your branch in to test</b>. It <b>never</b> ships.</div></div>
+        <div class="mrow"><div class="j j-rel"><code>release/&lt;cycle&gt;</code></div><div>What ships this release — only the ready Stories.</div><div>The <b>Engineering Lead</b> builds it. You don't touch it.</div></div>
       </div>
-      <div class="keynote reveal d6">🔑 <code>git branch -r | grep ST-1234</code> finds every piece of the US, in any repo. Same name across repos = the cross-repo key.</div>
+      <div class="keynote reveal d4">Cut everything <b>from <code>production</code></b>. Test <b>in <code>qa</code></b>. Ship <b>via the release branch</b>. That's the map.</div>
     </div>
-    <div class="foot">US = largest release/branch unit · merge-commit, never rebase-merge</div>
+    <div class="foot">production = live · your branch = your work · qa = test · release = what ships</div>
   </section>
 
-  <!-- 4 TESTING TRACK — qa is a sink -->
+  <!-- 5 BRANCH GRAPH -->
   <section class="slide">
     <div class="pad">
-      <div class="eyebrow x-exec reveal d1">Testing track</div>
-      <h2 class="reveal d2">qa accumulates everything — and never ships</h2>
-      <p class="lead reveal d2">In-flight US branches <b>merge into <code style="color:var(--exec-t)">qa</code></b> so they're tested together (cross-US, front vs back). <code style="color:var(--exec-t)">qa</code> is a <b>sink</b>: merges flow IN, nothing flows out — <b>it is never merged into production</b>.</p>
-      <div class="track reveal d3">
-        <span class="lbl" style="color:var(--exec-t)">qa (soup)</span>
-        <div class="line">
-          <span class="commit base">●<span class="cap">production base</span></span>
-          <span class="seg"></span>
-          <span class="commit s1">M<span class="cap"><b>US ST-1234</b></span></span>
-          <span class="seg"></span>
-          <span class="commit s2">M<span class="cap"><b>US ST-1240</b></span></span>
-          <span class="seg"></span>
-          <span class="commit s2">M<span class="cap"><b>US ST-1255</b></span></span>
-        </div>
-      </div>
-      <div class="cmd reveal d4" style="margin-top:60px;">
-        <span class="p">$</span> git checkout qa<br>
-        <span class="p">$</span> git merge <span class="k">--no-ff</span> origin/ST-1234 &nbsp;<span class="cm"># merge US branches IN to test together</span><br>
-        <span class="p">$</span> git push origin qa &nbsp;<span class="cm"># deploys the soup to the qa env — NOT a release</span>
-      </div>
+      <div class="eyebrow reveal d1">The picture</div>
+      <h2 class="reveal d2">One branch, two destinations</h2>
+      <div class="graph reveal d2"><span class="gp">production</span> ──cut──► <span class="gs">your branch ST-1234</span> ┤   ← your Tasks (PRs) merge in here = the gate
+                                        │
+                                        ├──►  <span class="gq">qa</span>               · test only · never goes to production
+                                        │
+                                        └──►  <span class="gs">release/&lt;cycle&gt;</span>  ──►  <span class="gp">production</span>   · only ready Stories</div>
+      <div class="keynote reveal d3">🧪 The arrow into <code>qa</code> is a <b>dead end</b> — testing only. 📦 Only the <b>release branch</b> reaches <code>production</code>. Your branch is the single source that feeds both.</div>
     </div>
-    <div class="foot">qa is a sink · never merged into production · never commit directly to it</div>
+    <div class="foot">Read it left to right: where your branch comes from, and where it goes</div>
   </section>
 
-  <!-- 5 RELEASE TRACK -->
+  <!-- 6 TUTORIAL INTRO -->
   <section class="slide">
     <div class="pad">
-      <div class="eyebrow x-bead reveal d1">Release track</div>
-      <h2 class="reveal d2">Assemble a release · ship via pre-main</h2>
-      <p class="lead reveal d2">A disposable <code>release/&lt;cycle&gt;</code> branch is cut from <code>production</code>; only the <b>ready</b> US branches are volcadas in. It's promoted to <code>production</code>, where the <b>pre-main (k8s) gate validates only the release</b> before go-live.</p>
+      <div class="eyebrow x-bead reveal d1">Day-by-day tutorial</div>
+      <h2 class="reveal d2">Let's follow one Story: ST-1234</h2>
+      <p class="lead reveal d2">A real example, day by day — so you can repeat it on your own work. Five moments, start to ship:</p>
+      <div class="tl reveal d3">
+        <div class="tlrow"><span class="t" style="color:var(--strat-t)">Day 1</span><span><b>Start.</b> Create your branch and begin your Tasks.</span></div>
+        <div class="tlrow"><span class="t" style="color:var(--exec-t)">Day 2</span><span><b>Test.</b> Merge your branch into <code>qa</code> and test it with everyone else's.</span></div>
+        <div class="tlrow"><span class="t" style="color:var(--exec-t)">Day 3</span><span><b>Sync.</b> A release shipped — pull <code>production</code> into your branch.</span></div>
+        <div class="tlrow"><span class="t" style="color:var(--bead-t)">Day 4</span><span><b>Ready.</b> Tests pass — mark it <code>ready-to-release</code>. You're done.</span></div>
+        <div class="tlrow"><span class="t" style="color:var(--bead-t)">Ship</span><span><b>Release day.</b> The Lead ships your Story with the release.</span></div>
+      </div>
+    </div>
+    <div class="foot">Tutorial · follow ST-1234 from Day 1 to release</div>
+  </section>
+
+  <!-- 7 DAY 1 -->
+  <section class="slide">
+    <div class="pad">
+      <div class="eyebrow reveal d1"><span class="day">Day 1</span> Start your work</div>
+      <h2 class="reveal d2">Create your branch, start your Tasks</h2>
+      <p class="lead reveal d2">A User Story (ST-1234) is assigned to you. Cut your <b>US branch from <code>production</code></b> — this branch is your gate. Then work each Task on its own branch and <b>PR it into your US branch</b>.</p>
       <div class="cmd reveal d3">
         <span class="p">$</span> git checkout production &amp;&amp; git pull<br>
-        <span class="p">$</span> git checkout -b release/2026-06 &nbsp;<span class="cm"># disposable, fresh off production</span><br>
-        <span class="p">$</span> git merge <span class="k">--no-ff</span> origin/ST-1234 &nbsp;<span class="cm"># volcar ONLY ready US branches</span><br>
-        <span class="p">$</span> git merge <span class="k">--no-ff</span> origin/ST-1240<br>
-        <span class="p">$</span> <span class="cm"># merge release/2026-06 → production → pre-main (k8s) validates only the release → approve → live 🚀</span>
+        <span class="p">$</span> git checkout -b <span class="k">ST-1234</span> &nbsp;<span class="cm"># your US branch — same name in every repo it touches</span><br>
+        <span class="p">$</span> git checkout -b <span class="k">ST-1235-backend</span> &nbsp;<span class="cm"># a Task branch off your US branch</span><br>
+        <span class="p">$</span> gh pr create --base <span class="k">ST-1234</span> &nbsp;<span class="cm"># PR the Task INTO your US branch (merge-commit)</span>
       </div>
-      <div class="keynote reveal d4" style="border-left-color:var(--bead);">📦 The release is assembled from <b>production + the ready US branches</b> — <b>never from <code style="color:var(--bead-t)">qa</code></b>.</div>
+      <div class="keynote reveal d4">Tasks merge <b>into your US branch</b>. The frontend Task and the backend Task of the same Story <b>integrate and test right here</b>, on your branch.</div>
     </div>
-    <div class="foot">release branch is disposable · rebuilt per cycle · qa is not the source</div>
+    <div class="foot">Day 1 · cut ST-1234 from production · PR your Tasks into it</div>
   </section>
 
-  <!-- 6 WHY QA NEVER CONTAMINATES PRODUCTION -->
+  <!-- 8 DAY 2 -->
   <section class="slide">
     <div class="pad">
-      <div class="eyebrow reveal d1">Two tracks, no leaks</div>
-      <h2 class="reveal d2">Why qa never contaminates production</h2>
-      <p class="lead reveal d2"><code style="color:var(--exec-t)">qa</code> is a <b>sink, not a source</b>: you merge US → qa, never the reverse. Each US stays a clean delta over <code>production</code>, so when it ships via the release branch it brings <b>nothing</b> from the soup.</p>
+      <div class="eyebrow x-exec reveal d1"><span class="day" style="background:var(--exec);color:#1a1206">Day 2</span> Test it in qa</div>
+      <h2 class="reveal d2">Merge into qa to test together</h2>
+      <p class="lead reveal d2">Your Tasks are in. Now test the whole Story <b>integrated with everyone else's work</b> — merge your US branch into <code style="color:var(--exec-t)">qa</code> and it deploys to the QA environment.</p>
+      <div class="cmd reveal d3">
+        <span class="p">$</span> git checkout qa &amp;&amp; git pull<br>
+        <span class="p">$</span> git merge <span class="k">--no-ff</span> ST-1234 &nbsp;<span class="cm"># bring your branch IN to test</span><br>
+        <span class="p">$</span> git push origin qa &nbsp;<span class="cm"># deploys to the QA environment</span>
+      </div>
+      <div class="keynote reveal d4" style="border-left-color:var(--exec);">⚠️ <code>qa</code> is the shared <b>test</b> environment — it <b>never goes to production</b>. Found a bug? Fix it <b>on your US branch</b> and merge again. <b>Never commit a fix directly to <code>qa</code></b> (it would be in qa but missing from production).</div>
+    </div>
+    <div class="foot">Day 2 · merge your branch → qa · test · qa never ships</div>
+  </section>
+
+  <!-- 9 DAY 3 -->
+  <section class="slide">
+    <div class="pad">
+      <div class="eyebrow reveal d1"><span class="day">Day 3</span> Stay in sync</div>
+      <h2 class="reveal d2">A release shipped — pull it in</h2>
+      <p class="lead reveal d2">While you were working, a release (or a hotfix) went to <code>production</code>. It moved forward. Pull it into your branch so you don't drift — and so you don't accidentally <b>re-introduce a bug a hotfix already fixed</b>.</p>
+      <div class="cmd reveal d3">
+        <span class="p">$</span> git checkout ST-1234<br>
+        <span class="p">$</span> git merge production &nbsp;<span class="cm"># MERGE — never rebase</span>
+      </div>
+      <div class="keynote reveal d4">🟢 Always <b>merge</b> <code>production</code> into your branch — <b>never rebase</b> it. Your branch is shared (Task PRs point at it); a rebase would force-push and break them. Do this after <b>every</b> release or hotfix.</div>
+    </div>
+    <div class="foot">Day 3 · git merge production into your branch · merge, not rebase</div>
+  </section>
+
+  <!-- 10 DAY 4 -->
+  <section class="slide">
+    <div class="pad">
+      <div class="eyebrow x-bead reveal d1"><span class="day" style="background:var(--bead);color:#04140b">Day 4</span> Mark it ready</div>
+      <h2 class="reveal d2">Ready means ready — then you're done</h2>
+      <p class="lead reveal d2">Your Story works and tests pass in <code>qa</code>. Mark it <b>release-ready</b>. The Engineering Lead checks these four things before it can ship:</p>
       <div class="tl reveal d3">
-        <div class="tlrow"><span class="t">1</span><span>US &amp; release branches are <b>cut from production</b> — never from <code>qa</code>.</span></div>
-        <div class="tlrow"><span class="t">2</span><span><b>qa is a sink</b> — merge US → qa, but <b>never</b> merge qa back into a US / release / production branch.</span></div>
-        <div class="tlrow"><span class="t">3</span><span>The <b>release branch is built from production + ready US branches</b> — never from <code>qa</code>.</span></div>
-        <div class="tlrow"><span class="t">4</span><span><b>Sync = <code>git merge production</code></b> into a US branch — never <code>qa</code>.</span></div>
-        <div class="tlrow"><span class="t">5</span><span><b>Integration fixes go to the US/Task branch</b> (then re-merge to qa) — never direct commits to <code>qa</code>.</span></div>
+        <div class="tlrow"><span class="t">①</span><span><b>Self-contained</b> — only this Story's work; no dependency on an unreleased Story.</span></div>
+        <div class="tlrow"><span class="t">②</span><span><b>Synced</b> — <code>git merge production</code> is up to date.</span></div>
+        <div class="tlrow"><span class="t">③</span><span><b>Tested</b> — validated integrated in <code>qa</code>.</span></div>
+        <div class="tlrow"><span class="t">④</span><span><b>Green</b> — PRs pass + label <code style="color:var(--bead-t)">ready-to-release</code>.</span></div>
       </div>
-      <div class="keynote reveal d5" style="border-left-color:var(--danger);">🔴 <b>Inverse gotcha:</b> a fix committed <b>directly to qa</b> (not the US branch) lives in qa but is <b>missing from production</b> when the US ships.</div>
+      <div class="keynote reveal d4">🎯 Your job ends here. You do <b>not</b> assemble or promote the release — the Lead does. If your Story isn't ready, it simply waits for the next one.</div>
     </div>
+    <div class="foot">Day 4 · all four points green · label ready-to-release · hand off to the Lead</div>
   </section>
 
-  <!-- 7 THE FOUR TRAPS -->
+  <!-- 11 RELEASE DAY -->
   <section class="slide">
     <div class="pad">
-      <div class="eyebrow reveal d1">The classic traps</div>
-      <h2 class="reveal d2">…and the one move that beats each</h2>
+      <div class="eyebrow reveal d1"><span class="day" style="background:var(--bead);color:#04140b">Ship</span> Release day</div>
+      <h2 class="reveal d2">How your Story reaches production</h2>
+      <p class="lead reveal d2">You don't do this — but it helps to see the end. On release day the <b>Lead</b> builds the release from the ready Stories and promotes it.</p>
+      <div class="flow">
+        <div class="fnode prod reveal d3"><div class="fn">production</div><div class="fl">baseline</div></div>
+        <div class="farrow reveal d3">cut →</div>
+        <div class="fnode reveal d3" style="border-color:rgba(91,141,239,.6)"><div class="fn" style="color:var(--strat-t)">release branch</div><div class="fl">merge in only the READY Stories</div></div>
+        <div class="farrow reveal d4">→</div>
+        <div class="fnode reveal d4" style="border-color:rgba(224,163,94,.6)"><div class="fn" style="color:var(--exec-t)">pre-main (k8s)</div><div class="fl">deploy to a pod · validate ONLY this release</div></div>
+        <div class="farrow reveal d5">→</div>
+        <div class="fnode prod reveal d5"><div class="fn">production 🚀</div><div class="fl">approved → live</div></div>
+      </div>
+      <div class="keynote reveal d5">Your Story ships <b>whole</b>. Nothing is ever <b>cherry-picked</b>; if a Story has to be dropped, the Lead just <b>rebuilds the release</b> without it — your branch stays safe in <code>qa</code>.</div>
+    </div>
+    <div class="foot">Release day · Lead-owned · pre-main validates before go-live</div>
+  </section>
+
+  <!-- 12 RULES -->
+  <section class="slide">
+    <div class="pad">
+      <div class="eyebrow x-danger reveal d1">The rules · keep these handy</div>
+      <h2 class="reveal d2">✅ Always · ❌ Never</h2>
       <div class="grid2">
-        <div class="gcard gc-1 reveal d2"><div class="h">① Drop a US late</div><div class="d">It's in qa and queued for the release.</div><div class="fix">→ <b>Rebuild the release branch</b> without it. qa untouched.</div></div>
-        <div class="gcard gc-2 reveal d3"><div class="h">② Stale US vs moved prod</div><div class="d">production advanced; the US branch is behind.</div><div class="fix">→ <b>git merge production</b> into the US branch, then re-validate.</div></div>
-        <div class="gcard gc-3 reveal d4"><div class="h">③ Urgent task in a half-done US</div><div class="d">One piece is needed now, the rest isn't.</div><div class="fix">→ <b>Fix-forward off production</b> as its own PR.</div></div>
-        <div class="gcard gc-4 reveal d5"><div class="h">④ Code shared by two US's</div><div class="d">Both need the same change.</div><div class="fix">→ Land it <b>first to production</b>; both pick it up via sync.</div></div>
-      </div>
-    </div>
-    <div class="foot">None of these is ever solved with a cherry-pick</div>
-  </section>
-
-  <!-- 8 DROP / ROLLBACK -->
-  <section class="slide">
-    <div class="pad">
-      <div class="eyebrow x-danger reveal d1">Undo = rebuild / revert</div>
-      <h2 class="reveal d2">Drop a US · roll back a release</h2>
-      <div class="track reveal d2">
-        <span class="lbl" style="color:var(--bead-t)">production</span>
-        <div class="line">
-          <span class="commit base">●</span><span class="seg"></span>
-          <span class="commit base">●</span><span class="seg"></span>
-          <span class="commit s2">M<span class="cap"><b>Release 2026-06</b></span></span><span class="seg"></span>
-          <span class="commit rev">R<span class="cap" style="color:var(--danger-t)"><b>revert -m 1</b></span></span>
+        <div class="gcard gc-4 reveal d2">
+          <div class="h" style="color:var(--bead-t)">✅ Always</div>
+          <ul class="do">
+            <li><b>Cut</b> your branch <b>from <code>production</code></b></li>
+            <li><b>PR your Tasks into your US branch</b> (merge-commit)</li>
+            <li><b>Merge your branch → <code>qa</code></b> only to test</li>
+            <li><b>Sync</b> with <code>git merge production</code> after releases</li>
+            <li><b>Fix bugs on your branch</b>, then merge again</li>
+          </ul>
+        </div>
+        <div class="gcard gc-3 reveal d3">
+          <div class="h" style="color:var(--danger-t)">❌ Never</div>
+          <ul class="dont">
+            <li>Push to <code>production</code>, or cut a branch from <code>qa</code></li>
+            <li><b>Merge <code>qa</code></b> into your branch or production</li>
+            <li><b>Commit a fix directly to <code>qa</code></b></li>
+            <li><b>Rebase</b> your US branch (use <code>merge</code>)</li>
+            <li><b>cherry-pick</b> anything</li>
+          </ul>
         </div>
       </div>
-      <div class="grid2" style="margin-top:60px;">
-        <div class="gcard gc-3 reveal d3"><div class="h">Drop one US</div><div class="d"><b>Rebuild</b> the release branch = <code style="color:var(--text)">production + the remaining ready US branches</code>. qa untouched (the US keeps testing there).</div></div>
-        <div class="gcard gc-3 reveal d4"><div class="h">Roll back the whole release</div><div class="d"><code style="color:var(--text)">git revert -m 1 &lt;release merge&gt;</code> + redeploy. A new commit undoes it — no history rewrite.</div></div>
-      </div>
-      <div class="keynote reveal d5" style="border-left-color:var(--danger);">🏳️ Without flags, the "off switch" is a <b>rebuild or a revert + redeploy</b> — slower than a flag flip, but the team already knows it.</div>
     </div>
+    <div class="foot">production is the only source for branches · qa is test-only · no cherry-pick</div>
   </section>
 
-  <!-- 9 DRIFT / SYNC -->
+  <!-- 13 IF SOMETHING GOES WRONG -->
   <section class="slide">
     <div class="pad">
-      <div class="eyebrow reveal d1">Drift &amp; sync</div>
-      <h2 class="reveal d2">Keep US branches current — merge, not rebase</h2>
-      <div class="tl">
-        <div class="tlrow reveal d2"><span class="t">T0</span><span><b>production = A.</b> Cut US ST-1234 (off A); it touches <code style="color:var(--text)">classifier.py</code>.</span></div>
-        <div class="tlrow bad reveal d3"><span class="t">T1</span><span>Hotfix <b>H</b> fixes a bug in <code style="color:var(--text)">classifier.py</code> → production: A → B. <b style="color:var(--danger-t)">ST-1234 doesn't have H — shipping it now would re-introduce the bug.</b> 🔴</span></div>
-        <div class="tlrow good reveal d4"><span class="t">T2</span><span>Sync: <code style="color:var(--text)">git merge production</code> into ST-1234 → now = B + my changes, includes H, conflicts resolved here. ✅</span></div>
+      <div class="eyebrow reveal d1">When things go sideways</div>
+      <h2 class="reveal d2">If something goes wrong</h2>
+      <div class="grid2">
+        <div class="gcard gc-1 reveal d2"><div class="h">Bug in your Story</div><div class="d">Found while testing in qa.</div><div class="fix">→ Add <b>more commits on your US branch</b> (fix-forward), then merge to qa again. Don't delete the branch.</div></div>
+        <div class="gcard gc-3 reveal d3"><div class="h">Urgent production fix</div><div class="d">Something is broken in production now.</div><div class="fix">→ <b>Hotfix:</b> branch off <code>production</code> → PR back to <code>production</code>. Then everyone syncs.</div></div>
+        <div class="gcard gc-2 reveal d4"><div class="h">Your Story must be pulled from a release</div><div class="d">It's not ready in time.</div><div class="fix">→ The <b>Lead rebuilds the release</b> without it. You <b>never</b> cherry-pick. Your branch waits in qa.</div></div>
+        <div class="gcard gc-4 reveal d5"><div class="h">production moved ahead of you</div><div class="d">A release shipped mid-work.</div><div class="fix">→ <code style="color:var(--bead-t)">git merge production</code> into your branch (Day 3). Re-test.</div></div>
       </div>
-      <div class="keynote reveal d5">❌ <b>Don't rebase the US branch</b> — it's shared (Task PRs target it); rebase force-pushes and breaks them. 🟢 <b>Cheapest defense: small, short-lived US's.</b></div>
     </div>
-    <div class="foot">Sync after every release and every hotfix</div>
+    <div class="foot">Every fix is forward · nothing is ever cherry-picked</div>
   </section>
 
-  <!-- 10 DEFINITION OF READY + OWNERSHIP -->
+  <!-- 14 QUICK REFERENCE -->
   <section class="slide">
     <div class="pad">
-      <div class="eyebrow x-bead reveal d1">Definition of Ready · ownership</div>
-      <h2 class="reveal d2">Developer prepares · Lead is a gate</h2>
-      <p class="lead reveal d2">A US is <b>release-ready</b> only when, in every repo it touches, its developer confirms: ① self-contained · ② synced (<code>git merge production</code>) · ③ integrated QA passed (validated in <code>qa</code>) · ④ PR(s) green + <code style="color:var(--bead-t)">ready-to-release</code>.</p>
-      <div class="own reveal d3">
-        <div class="orow ohead"><div>Responsibility</div><div>Owner</div></div>
-        <div class="orow"><div>Keep the US release-ready (the 4 points), per repo</div><div class="who">Developer</div></div>
-        <div class="orow"><div><code>git merge production</code> + resolve conflicts</div><div class="who">Developer</div></div>
-        <div class="orow"><div><b>Verify</b> readiness before a US is volcada into the release branch</div><div class="who">Eng Lead (gate)</div></div>
-        <div class="orow"><div><b>Pick</b> which ready US's ship — in any order</div><div class="who">Product + Arch</div></div>
-      </div>
-      <div class="keynote reveal d5">🎯 The Lead gates entry to the <b>release branch</b>, not to <code>qa</code> (US branches merge to qa freely to test). Ready US's wait in a <b>pool</b>; a release picks any subset, any order.</div>
-    </div>
-  </section>
-
-  <!-- 11 CHEAT SHEET -->
-  <section class="slide">
-    <div class="pad">
-      <div class="eyebrow reveal d1">Keep this handy</div>
-      <h2 class="reveal d2">Every operation, one action</h2>
+      <div class="eyebrow reveal d1">Quick reference card</div>
+      <h2 class="reveal d2">What do I do? — one line each</h2>
       <div class="cheat reveal d2">
-        <div class="crow chead"><div>Situation</div><div>What you do</div></div>
-        <div class="crow"><div>Build a US</div><div class="act">Tasks → merge-commit PR into the <code>ST-&lt;id&gt;</code> US branch (the gate)</div></div>
-        <div class="crow"><div>Test integrated</div><div class="act">Merge US branches into <code>qa</code> (sink — never promoted)</div></div>
-        <div class="crow"><div>Assemble the release</div><div class="act">Cut <code>release/&lt;cycle&gt;</code> off production; volcar only the ready US branches</div></div>
-        <div class="crow"><div>Cut a release</div><div class="act"><code>release/&lt;cycle&gt; → production</code> · pre-main (k8s) validates only the release</div></div>
-        <div class="crow"><div>Bug in a US</div><div class="act">Fix-forward (more commits on the US branch)</div></div>
-        <div class="crow"><div>Drop a US</div><div class="act">Rebuild the release branch — never cherry-pick</div></div>
-        <div class="crow"><div>Bad release in prod</div><div class="act"><code>git revert -m 1 &lt;release merge&gt;</code> + redeploy</div></div>
-        <div class="crow"><div>After each release / hotfix</div><div class="act"><code>git merge production</code> into in-flight US branches</div></div>
+        <div class="crow chead"><div>I want to…</div><div>Do this</div></div>
+        <div class="crow"><div>Start a Story</div><div class="act"><code>git checkout production &amp;&amp; git checkout -b ST-1234</code></div></div>
+        <div class="crow"><div>Add a Task</div><div class="act">Branch off ST-1234 → PR it <b>into ST-1234</b> (merge-commit)</div></div>
+        <div class="crow"><div>Test my Story</div><div class="act"><code>git checkout qa &amp;&amp; git merge --no-ff ST-1234 &amp;&amp; git push</code></div></div>
+        <div class="crow"><div>Fix a bug</div><div class="act">More commits on <b>ST-1234</b> → merge to qa again</div></div>
+        <div class="crow"><div>Catch up after a release</div><div class="act"><code>git checkout ST-1234 &amp;&amp; git merge production</code> (never rebase)</div></div>
+        <div class="crow"><div>Ship my Story</div><div class="act">Mark <code>ready-to-release</code> — the Lead does the rest</div></div>
+        <div class="crow"><div>Ship something urgent</div><div class="act">Hotfix branch off <code>production</code> → PR to <code>production</code></div></div>
       </div>
     </div>
+    <div class="foot">Screenshot this slide — it's your daily cheat sheet</div>
   </section>
 
-  <!-- 12 CLOSING -->
+  <!-- 15 CLOSING -->
   <section class="slide">
     <div class="pad closing">
-      <div class="eyebrow reveal d1">The rules · JH-06 … JH-13</div>
-      <h2 class="reveal d2">Two tracks. <span class="g">Cherry-pick-free.</span></h2>
-      <div class="rules">
-        <div class="rule reveal d2"><b>JH-06</b> Task → US branch (the gate); US = release unit; merge-commit, never rebase-merge</div>
-        <div class="rule reveal d3"><b>JH-07</b> qa = integration accumulator · a sink · never promoted</div>
-        <div class="rule reveal d3"><b>JH-08</b> disposable release branch → production (pre-main k8s gate)</div>
-        <div class="rule reveal d4"><b>JH-09</b> no cherry-pick: drop = rebuild release branch; rollback = revert</div>
-        <div class="rule reveal d4"><b>JH-10</b> guardrails keep qa out of production (qa is a sink)</div>
-        <div class="rule reveal d5"><b>JH-11</b> fix-forward; hotfix off production</div>
-        <div class="rule reveal d5"><b>JH-12</b> sync via merge production (not rebase); small US's</div>
-        <div class="rule reveal d6"><b>JH-13</b> Definition of Ready is developer-owned; Lead is the gate</div>
-      </div>
-      <p class="lead reveal d6" style="margin-top:28px;">🏳️ Feature flags layer on top later — without changing any of this.</p>
+      <div class="eyebrow reveal d1">Two rules that never break</div>
+      <h2 class="reveal d2"><span class="g">qa</span> is for testing — it never ships.<br>Nothing is ever cherry-picked.</h2>
+      <p class="lead reveal d3">Everything else you can look up here. Cut from <code>production</code>, build on your branch, test in <code>qa</code>, mark it ready — and your Story ships, whole, with the release.</p>
+      <p class="lead reveal d4" style="margin-top:24px;color:var(--bead-t);">You keep the flow healthy. When in doubt, ask your Lead — but never cherry-pick. 🟢</p>
     </div>
-    <div class="foot">Git Flow — Strata (ST) · Engineering Atlas</div>
+    <div class="foot">Git Flow — Developer Guide · Strata (ST) · Engineering Atlas</div>
   </section>
 
 </main></div>
@@ -395,7 +410,7 @@ h2{font-family:var(--font-display);font-weight:800;font-size:78px;line-height:.9
 <nav class="deck-controls" aria-label="Slide navigation">
   <a href="./index.html" id="homeBtn" title="Back to Engineering Atlas" aria-label="Back to Engineering Atlas">⌂</a>
   <button id="prevBtn" aria-label="Previous slide">‹</button>
-  <span id="counter">01 / 12</span>
+  <span id="counter">01 / 15</span>
   <button id="nextBtn" aria-label="Next slide">›</button>
 </nav>
 
