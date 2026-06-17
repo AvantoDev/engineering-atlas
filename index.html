@@ -93,6 +93,7 @@ h1 .g{background:linear-gradient(100deg,var(--strat),var(--exec));-webkit-backgr
 .k-swarm{border-top-color:var(--bead);}
 .k-beadbox{border-top-color:var(--strat);}
 .k-qa{border-top-color:var(--exec);}
+.k-pr{border-top-color:var(--epic);}
 /* soon cards muted */
 .card.soon{opacity:.62;}
 .card.soon:hover{opacity:.82;border-color:var(--line-strong);}
@@ -138,7 +139,7 @@ footer .f-right{font-size:13px;letter-spacing:.16em;text-transform:uppercase;col
     <h1 class="reveal d2">Engineering<br><span class="g">Atlas</span></h1>
     <p class="tagline reveal d3">An explorable, visual map of <b>how we actually work</b> — our processes, architecture, and workflows, one interactive section at a time. Built for PMs, architects, developers, QA and DevOps alike.</p>
     <div class="herometa reveal d4">
-      <span class="chip"><b>2</b> sections live</span>
+      <span class="chip"><b>3</b> sections live</span>
       <span class="chip"><b>4</b> in the pipeline</span>
       <span class="chip">Updated continuously</span>
     </div>
@@ -173,6 +174,14 @@ footer .f-right{font-size:13px;letter-spacing:.16em;text-transform:uppercase;col
       <div class="no">03</div>
       <h3>Git Flow &amp; Releases</h3>
       <p>How the four-level hierarchy maps to branches — qa accumulator, releases, drops &amp; rollbacks by revert, drift &amp; sync. No cherry-pick.</p>
+      <div class="foot"><span class="tag live">● Live</span><span class="go">→</span></div>
+    </a>
+
+    <!-- LIVE — PR Review Agent -->
+    <a class="card live k-pr reveal d5" href="./pr-review-agent.html">
+      <div class="no">07</div>
+      <h3>PR Review Agent</h3>
+      <p>Our automated first reviewer. Tag it in Slack with a PR link — it reviews against spec + best practices, posts 🔴🟡🟢 findings, and updates Jira, Notion &amp; Slack.</p>
       <div class="foot"><span class="tag live">● Live</span><span class="go">→</span></div>
     </a>
 
