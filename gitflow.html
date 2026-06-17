@@ -163,7 +163,7 @@ h2{font-family:var(--font-display);font-weight:800;font-size:78px;line-height:.9
       <h1 class="reveal d2">Git <span class="g">Flow</span></h1>
       <p class="lead reveal d3">How the four-level Jira hierarchy maps to branches — and how we ship Strata <b>without ever cherry-picking</b>.</p>
       <div class="chips">
-        <span class="chip reveal d4"><b>Story</b> = the release unit</span>
+        <span class="chip reveal d4"><b>US</b> = the release unit · <b>qa</b> = a sink</span>
         <span class="chip no reveal d5">✕ no cherry-pick, ever</span>
         <span class="chip reveal d6">🏳️ no feature flags (yet)</span>
       </div>
@@ -174,26 +174,26 @@ h2{font-family:var(--font-display);font-weight:800;font-size:78px;line-height:.9
   <!-- 2 THE MODEL -->
   <section class="slide">
     <div class="pad">
-      <div class="eyebrow reveal d1">The model</div>
-      <h2 class="reveal d2">From production, back to production</h2>
+      <div class="eyebrow reveal d1">The model · two tracks</div>
+      <h2 class="reveal d2">Test in qa · ship via a release branch</h2>
       <div class="flow">
-        <div class="fnode prod reveal d2"><div class="fn">production</div><div class="fl">stable baseline</div></div>
+        <div class="fnode prod reveal d2"><div class="fn">production</div><div class="fl">baseline</div></div>
         <div class="farrow reveal d2">→</div>
-        <div class="fnode story reveal d3"><div class="fn">ST-1234</div><div class="fl">Story branch · Tasks merge in</div></div>
+        <div class="fnode story reveal d3"><div class="fn">US ST-1234</div><div class="fl">the gate · Tasks merge in</div></div>
         <div class="farrow reveal d3">→</div>
-        <div class="fnode qa reveal d4"><div class="fn">qa</div><div class="fl">accumulator · ready Stories only</div></div>
+        <div class="fnode reveal d4" style="border-color:rgba(91,141,239,.6)"><div class="fn" style="color:var(--strat-t)">release/2026-06</div><div class="fl">disposable · only ready US</div></div>
         <div class="farrow reveal d4">→</div>
-        <div class="fnode prod reveal d5"><div class="fn">production 🚀</div><div class="fl">release</div></div>
+        <div class="fnode prod reveal d5"><div class="fn">production 🚀</div><div class="fl">pre-main (k8s) validates only the release</div></div>
       </div>
-      <div class="map reveal d4">
+      <div class="keynote reveal d4" style="border-left-color:var(--exec);margin-top:28px;">🧪 <b>Testing track (parallel):</b> in-flight US branches also merge into <code style="color:var(--exec-t)">qa</code> for integrated testing — <b>qa is a sink, never promoted</b>.</div>
+      <div class="map reveal d5">
         <div class="mrow mhead"><div>Jira</div><div>git</div><div>Notes</div></div>
-        <div class="mrow"><div class="j j-epic">Epic</div><div>—</div><div>organizes only; not a branch</div></div>
-        <div class="mrow"><div class="j j-story">User Story</div><div><code>ST-1234</code> (one per repo)</div><div>cut from <code>production</code> · same name = cross-repo key</div></div>
-        <div class="mrow"><div class="j j-task">Task = Initech Epic</div><div><code>ST-1235-backend</code> → merge-commit → Story</div><div>one per discipline/repo</div></div>
+        <div class="mrow"><div class="j j-story">User Story</div><div><code>ST-1234</code> branch — the gate</div><div>cut from <code>production</code> · largest release/branch unit</div></div>
+        <div class="mrow"><div class="j j-task">Task = Initech Epic</div><div><code>ST-1235-backend</code> → merge-commit → US branch</div><div>front tests vs back here</div></div>
         <div class="mrow"><div class="j j-bead">Sub-task = Bead</div><div>a commit in the Task branch</div><div>—</div></div>
       </div>
     </div>
-    <div class="foot">⚠ merge-commit or squash — never rebase-merge a Story</div>
+    <div class="foot">Only qa &amp; production are permanent · Task/US/release are ephemeral · never rebase-merge</div>
   </section>
 
   <!-- 3 MULTI-REPO -->
@@ -215,26 +215,28 @@ h2{font-family:var(--font-display);font-weight:800;font-size:78px;line-height:.9
   <!-- 4 QA ACCUMULATOR -->
   <section class="slide">
     <div class="pad">
-      <div class="eyebrow x-exec reveal d1">The qa accumulator</div>
-      <h2 class="reveal d2">Each Story = one atomic, revertable merge</h2>
-      <p class="lead reveal d2">A Story enters <code style="color:var(--exec-t)">qa</code> only when <b>release-ready</b>, as a <b>single merge-commit</b>. That atomicity is what makes "drop it later" a one-click revert.</p>
+      <div class="eyebrow x-exec reveal d1">The testing track</div>
+      <h2 class="reveal d2">qa accumulates everything — and never ships</h2>
+      <p class="lead reveal d2">In-flight US branches merge into <code style="color:var(--exec-t)">qa</code> so they're tested together (cross-US, front vs back). <code style="color:var(--exec-t)">qa</code> is a <b>sink</b>: merges flow IN, nothing flows out — <b>it is never merged into production</b>.</p>
       <div class="track reveal d3">
-        <span class="lbl" style="color:var(--exec-t)">qa</span>
+        <span class="lbl" style="color:var(--exec-t)">qa (soup)</span>
         <div class="line">
           <span class="commit base">●<span class="cap">production base</span></span>
           <span class="seg"></span>
-          <span class="commit s1">M<span class="cap"><b>Merge ST-1234</b></span></span>
+          <span class="commit s1">M<span class="cap"><b>US ST-1234</b></span></span>
           <span class="seg"></span>
-          <span class="commit s2">M<span class="cap"><b>Merge ST-1240</b></span></span>
+          <span class="commit s2">M<span class="cap"><b>US ST-1240</b></span></span>
+          <span class="seg"></span>
+          <span class="commit s2">M<span class="cap"><b>US ST-1255</b></span></span>
         </div>
       </div>
       <div class="cmd reveal d4" style="margin-top:64px;">
         <span class="p">$</span> git checkout qa<br>
-        <span class="p">$</span> git merge <span class="k">--no-ff</span> origin/ST-1234 <span class="p">-m</span> <span class="c">"Merge Story ST-1234 into qa"</span><br>
-        <span class="p">$</span> git push origin qa &nbsp;<span class="cm"># deploys the bundle to the QA environment</span>
+        <span class="p">$</span> git merge <span class="k">--no-ff</span> origin/ST-1234 &nbsp;<span class="cm"># merge US branches IN to test</span><br>
+        <span class="p">$</span> git push origin qa &nbsp;<span class="cm"># deploys the soup to the qa env — NOT a release</span>
       </div>
     </div>
-    <div class="foot">Never commit directly to qa · one merge-commit per Story</div>
+    <div class="foot">qa is a sink · never merged into production · never commit directly to it</div>
   </section>
 
   <!-- 5 GOLDEN RULE -->
@@ -252,7 +254,7 @@ h2{font-family:var(--font-display);font-weight:800;font-size:78px;line-height:.9
       <div class="eyebrow reveal d1">The four classic traps</div>
       <h2 class="reveal d2">…and the one move that beats each</h2>
       <div class="grid2">
-        <div class="gcard gc-1 reveal d2"><div class="h">① Drop a Story late</div><div class="d">It's mixed into the release.</div><div class="fix">→ <b>Revert its PR</b> (one click). It was one atomic merge.</div></div>
+        <div class="gcard gc-1 reveal d2"><div class="h">① Drop a US late</div><div class="d">It's in qa and queued for the release.</div><div class="fix">→ <b>Rebuild the release branch</b> without it. qa untouched.</div></div>
         <div class="gcard gc-2 reveal d3"><div class="h">② Stale Story vs moved prod</div><div class="d">production advanced; the branch is behind.</div><div class="fix">→ <b>git merge production</b> before it ships. Re-validate.</div></div>
         <div class="gcard gc-3 reveal d4"><div class="h">③ Urgent task in a half-Story</div><div class="d">One piece is needed now, the rest isn't.</div><div class="fix">→ <b>Fix-forward off production</b> as its own PR.</div></div>
         <div class="gcard gc-4 reveal d5"><div class="h">④ Code shared by two Stories</div><div class="d">Both need the same change.</div><div class="fix">→ Land it <b>first to production</b>; both merge it in.</div></div>
@@ -265,7 +267,7 @@ h2{font-family:var(--font-display);font-weight:800;font-size:78px;line-height:.9
   <section class="slide">
     <div class="pad">
       <div class="eyebrow x-danger reveal d1">Undo = revert</div>
-      <h2 class="reveal d2">Drop a Story · roll back a release</h2>
+      <h2 class="reveal d2">Drop a US · roll back a release</h2>
       <div class="track reveal d2">
         <span class="lbl" style="color:var(--bead-t)">production</span>
         <div class="line">
@@ -276,7 +278,7 @@ h2{font-family:var(--font-display);font-weight:800;font-size:78px;line-height:.9
         </div>
       </div>
       <div class="grid2" style="margin-top:64px;">
-        <div class="gcard gc-3 reveal d3"><div class="h">Drop one Story</div><div class="d">GitHub <b>Revert</b> button on its <code style="color:var(--text)">Merge ST-1240 → qa</code> PR. Rebuild the bundle, re-promote.</div></div>
+        <div class="gcard gc-3 reveal d3"><div class="h">Drop one US</div><div class="d"><b>Rebuild</b> the release branch = production + the remaining ready US branches. qa untouched (the US keeps testing there).</div></div>
         <div class="gcard gc-3 reveal d4"><div class="h">Roll back the whole release</div><div class="d"><code style="color:var(--text)">git revert -m 1 &lt;release merge&gt;</code> + redeploy. A new commit undoes it — no history rewrite.</div></div>
       </div>
       <div class="keynote reveal d5" style="border-left-color:var(--danger);">🏳️ Without flags, the "off switch" is a <b>revert + redeploy</b> — slower than a flag flip, but the team already knows it.</div>
@@ -322,14 +324,14 @@ h2{font-family:var(--font-display);font-weight:800;font-size:78px;line-height:.9
       <h2 class="reveal d2">Every operation, one action</h2>
       <div class="cheat reveal d2">
         <div class="crow chead"><div>Situation</div><div>What you do</div></div>
-        <div class="crow"><div>Build a Story</div><div class="act">Branch <code>ST-&lt;id&gt;</code> off production; Tasks merge-commit PR into it</div></div>
-        <div class="crow"><div>Move toward release</div><div class="act">When ready, <code>merge --no-ff</code> the Story into <code>qa</code></div></div>
-        <div class="crow"><div>Cut a release</div><div class="act"><code>qa → production</code></div></div>
-        <div class="crow"><div>Bug in a Story</div><div class="act">Fix-forward (more commits on the Story branch)</div></div>
-        <div class="crow"><div>Drop a Story</div><div class="act">Revert its PR — never cherry-pick</div></div>
+        <div class="crow"><div>Build a US</div><div class="act">Tasks → merge-commit PR into the <code>ST-&lt;id&gt;</code> US branch (the gate)</div></div>
+        <div class="crow"><div>Test integrated</div><div class="act">Merge US branches into <code>qa</code> (sink — never promoted)</div></div>
+        <div class="crow"><div>Assemble the release</div><div class="act">Cut <code>release/&lt;cycle&gt;</code> off production; volcar only the ready US branches</div></div>
+        <div class="crow"><div>Cut a release</div><div class="act"><code>release/&lt;cycle&gt; → production</code> · pre-main (k8s) validates only the release</div></div>
+        <div class="crow"><div>Bug in a US</div><div class="act">Fix-forward (more commits on the US branch)</div></div>
+        <div class="crow"><div>Drop a US</div><div class="act">Rebuild the release branch — never cherry-pick</div></div>
         <div class="crow"><div>Bad release in prod</div><div class="act"><code>git revert -m 1 &lt;release merge&gt;</code> + redeploy</div></div>
-        <div class="crow"><div>Hotfix</div><div class="act">Branch off <code>production</code> → PR to <code>production</code></div></div>
-        <div class="crow"><div>After each release</div><div class="act"><code>git merge production</code> into in-flight Stories</div></div>
+        <div class="crow"><div>After each release</div><div class="act"><code>git merge production</code> into in-flight US branches</div></div>
       </div>
     </div>
   </section>
@@ -337,17 +339,19 @@ h2{font-family:var(--font-display);font-weight:800;font-size:78px;line-height:.9
   <!-- 11 CLOSING -->
   <section class="slide">
     <div class="pad closing">
-      <div class="eyebrow reveal d1">The rules · JH-06 … JH-11</div>
-      <h2 class="reveal d2">Branch-native. <span class="g">Cherry-pick-free.</span></h2>
+      <div class="eyebrow reveal d1">The rules · JH-06 … JH-13</div>
+      <h2 class="reveal d2">Two tracks. <span class="g">Cherry-pick-free.</span></h2>
       <div class="rules">
-        <div class="rule reveal d2"><b>JH-06</b> Story = branch off production, one per repo; merge-commit, never rebase-merge</div>
-        <div class="rule reveal d3"><b>JH-07</b> qa accumulates ready Stories only, one merge each</div>
-        <div class="rule reveal d3"><b>JH-08</b> Release = qa→production; drop/rollback = revert</div>
-        <div class="rule reveal d4"><b>JH-09</b> Fix-forward by default; hotfix off production</div>
-        <div class="rule reveal d4"><b>JH-10</b> Sync with merge (not rebase); keep Stories small</div>
-        <div class="rule reveal d5"><b>JH-11</b> Ready is developer-owned; Lead is the gate</div>
+        <div class="rule reveal d2"><b>JH-06</b> Task → US branch (the gate); US = release unit; merge-commit, never rebase-merge</div>
+        <div class="rule reveal d3"><b>JH-07</b> qa = integration accumulator · a sink · never promoted</div>
+        <div class="rule reveal d3"><b>JH-08</b> disposable release branch → production (pre-main k8s gate)</div>
+        <div class="rule reveal d4"><b>JH-09</b> no cherry-pick: drop = rebuild release branch; rollback = revert</div>
+        <div class="rule reveal d4"><b>JH-10</b> guardrails keep qa out of production (qa is a sink)</div>
+        <div class="rule reveal d5"><b>JH-11</b> fix-forward; hotfix off production</div>
+        <div class="rule reveal d5"><b>JH-12</b> sync via merge production (not rebase); small US's</div>
+        <div class="rule reveal d6"><b>JH-13</b> Definition of Ready is developer-owned; Lead is the gate</div>
       </div>
-      <p class="lead reveal d6" style="margin-top:36px;">🏳️ Feature flags layer on top later — without changing any of this.</p>
+      <p class="lead reveal d6" style="margin-top:28px;">🏳️ Feature flags layer on top later — without changing any of this.</p>
     </div>
     <div class="foot">Git Flow — Strata (ST) · Engineering Atlas</div>
   </section>
