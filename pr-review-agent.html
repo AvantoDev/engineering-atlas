@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PR Review Agent — How to Use · AvantoDev</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ===== THEME (shared Atlas blueprint) ===== */
+:root{
+  --bg:#070b16; --panel:rgba(255,255,255,.035); --line:rgba(255,255,255,.14);
+  --text:#eef2fb; --muted:#8492af;
+  --strat:#5b8def; --exec:#e0a35e; --epic:#b07ce0; --bead:#3cc279; --danger:#e0676a;
+  --epic-t:#d3b6f0; --strat-t:#a9c4ff; --exec-t:#f2cf9b; --bead-t:#92e6b6; --danger-t:#f0a3a5;
+  --font-display:'Bricolage Grotesque',sans-serif; --font-mono:'JetBrains Mono',monospace;
+  --stage-bg:#04060d; --ease:cubic-bezier(.16,1,.3,1);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:100%;height:100%;margin:0;overflow:hidden;background:var(--stage-bg,#000);}
+.deck-viewport{position:fixed;inset:0;overflow:hidden;background:var(--stage-bg,#000);}
+.deck-stage{position:absolute;left:0;top:0;width:1920px;height:1080px;overflow:hidden;transform-origin:0 0;background:var(--slide-bg,#fff);}
+.slide{position:absolute;inset:0;width:1920px;height:1080px;overflow:hidden;display:block;visibility:hidden;opacity:0;pointer-events:none;}
+.slide.active,.slide.visible{visibility:visible;opacity:1;pointer-events:auto;z-index:1;}
+img,svg{max-width:100%;max-height:100%;}
+@media print{html,body{width:1920px;height:auto;overflow:visible;background:#fff;}.deck-viewport{position:static;overflow:visible;}.deck-stage{position:static;width:auto;height:auto;transform:none!important;}.slide{position:relative;display:block!important;visibility:visible!important;opacity:1!important;width:1920px;height:1080px;break-after:page;}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.2s!important;}}
+
+/* canvas */
+.slide{background:radial-gradient(120% 90% at 10% -5%,rgba(91,141,239,.18),transparent 52%),radial-gradient(120% 95% at 95% 108%,rgba(60,194,121,.13),transparent 52%),var(--bg);font-family:var(--font-mono);color:var(--text);}
+.slide::before{content:"";position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(120,150,210,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(120,150,210,.05) 1px,transparent 1px);background-size:60px 60px;mask-image:linear-gradient(180deg,transparent,#000 20%,#000 86%,transparent);}
+.pad{position:absolute;top:78px;left:130px;right:130px;bottom:78px;}
+
+/* chrome */
+.eyebrow{font-size:19px;letter-spacing:.26em;text-transform:uppercase;color:var(--strat-t);}
+.eyebrow.x-exec{color:var(--exec-t)}.eyebrow.x-danger{color:var(--danger-t)}.eyebrow.x-bead{color:var(--bead-t)}.eyebrow.x-epic{color:var(--epic-t)}
+.eyebrow .step{display:inline-block;background:var(--strat);color:#06101f;font-weight:700;border-radius:6px;padding:2px 12px;margin-right:14px;letter-spacing:.1em;}
+h2{font-family:var(--font-display);font-weight:800;font-size:72px;line-height:.98;letter-spacing:-.02em;margin-top:14px;}
+.lead{font-size:27px;line-height:1.5;color:var(--muted);max-width:1340px;margin-top:20px;}
+.lead b{color:var(--text);font-weight:500;}
+.lead code,.keynote code,.crow code,.cmd code,.map code,.do code,.dont code,.gcard code,.tlrow code{font-family:var(--font-mono);}
+.tracklabel{font-size:16px;letter-spacing:.2em;text-transform:uppercase;margin-top:26px;}
+.foot{position:absolute;left:130px;bottom:36px;font-size:15px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);}
+
+/* title */
+.title h1{font-family:var(--font-display);font-weight:800;font-size:128px;line-height:.9;letter-spacing:-.025em;margin-top:50px;}
+.title h1 .g{background:linear-gradient(100deg,var(--strat),var(--bead));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.title .lead{font-size:31px;max-width:1220px;}
+.title .chips{display:flex;gap:14px;margin-top:42px;flex-wrap:wrap;}
+.chip{font-size:18px;padding:11px 20px;border-radius:999px;border:1.5px solid var(--line);color:var(--muted);}
+.chip b{color:var(--text);font-weight:500;}
+.chip.ok{border-color:rgba(60,194,121,.5);color:var(--bead-t);}
+
+/* flow nodes */
+.flow{display:flex;align-items:stretch;gap:0;margin-top:14px;flex-wrap:wrap;}
+.fnode{flex:1;min-width:150px;border:1.5px solid var(--line);border-radius:14px;padding:22px 18px;background:var(--panel);text-align:center;}
+.fnode .fn{font-family:var(--font-display);font-weight:800;font-size:25px;}
+.fnode .fl{font-size:15px;color:var(--muted);margin-top:7px;line-height:1.4;}
+.fnode.you{border-color:rgba(91,141,239,.6)}.fnode.you .fn{color:var(--strat-t)}
+.fnode.bot{border-color:rgba(176,124,224,.6)}.fnode.bot .fn{color:var(--epic-t)}
+.fnode.out{border-color:rgba(60,194,121,.6)}.fnode.out .fn{color:var(--bead-t)}
+.farrow{display:flex;align-items:center;color:var(--muted);font-size:22px;padding:0 14px;white-space:nowrap;}
+
+/* mapping table */
+.map{margin-top:24px;border:1.5px solid var(--line);border-radius:14px;overflow:hidden;}
+.mrow{display:grid;grid-template-columns:.85fr 1.15fr 1.6fr;}
+.mrow>div{padding:16px 28px;border-bottom:1px solid var(--line);font-size:20px;line-height:1.42;}
+.mrow:last-child>div{border-bottom:none}
+.mhead>div{background:rgba(255,255,255,.05);font-size:15px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);}
+.mrow .j{font-family:var(--font-display);font-weight:700}
+.j-git{color:var(--epic-t)}.j-jira{color:var(--strat-t)}.j-notion{color:var(--text)}.j-slack{color:var(--bead-t)}
+.mrow code{color:var(--text);font-size:18px}
+.mrow b{color:var(--text);font-weight:500}
+
+/* command / chat block */
+.cmd{margin-top:24px;border:1.5px solid var(--line);border-radius:12px;background:rgba(4,7,15,.6);padding:24px 28px;font-size:21px;line-height:1.85;}
+.cmd .at{color:var(--epic-t);font-weight:700}.cmd .cmd-k{color:var(--bead-t)}.cmd .arg{color:var(--exec-t)}.cmd .cm{color:var(--muted);font-style:italic}
+.cmd .u{color:var(--strat-t);font-weight:700}
+
+/* keynote / cards */
+.keynote{margin-top:26px;font-size:22px;line-height:1.5;border-left:4px solid var(--strat);padding-left:22px;color:var(--muted)}
+.keynote b{color:var(--text);font-weight:500}
+.keynote code{color:var(--strat-t)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:32px;}
+.gcard{border:1.5px solid var(--line);border-left-width:5px;border-radius:14px;padding:24px 30px;background:var(--panel);}
+.gcard .h{font-family:var(--font-display);font-weight:700;font-size:25px;}
+.gcard .d{font-size:19px;line-height:1.5;color:var(--muted);margin-top:11px;}
+.gcard .d b{color:var(--text);font-weight:500}
+.gcard .fix{margin-top:13px;font-size:18px;color:var(--bead-t);}
+.gc-1{border-left-color:var(--exec)}.gc-2{border-left-color:var(--strat)}.gc-3{border-left-color:var(--danger)}.gc-4{border-left-color:var(--bead)}.gc-5{border-left-color:var(--epic)}
+.gc-1 .h{color:var(--exec-t)}.gc-2 .h{color:var(--strat-t)}.gc-3 .h{color:var(--danger-t)}.gc-4 .h{color:var(--bead-t)}.gc-5 .h{color:var(--epic-t)}
+
+/* numbered list / timeline */
+.tl{margin-top:24px;display:flex;flex-direction:column;gap:14px;}
+.tlrow{display:flex;gap:20px;align-items:flex-start;font-size:22px;line-height:1.45;color:var(--muted)}
+.tlrow .t{font-family:var(--font-display);font-weight:800;font-size:23px;color:var(--strat-t);flex:0 0 92px}
+.tlrow.bad .t{color:var(--danger-t)}.tlrow.good .t{color:var(--bead-t)}
+.tlrow b{color:var(--text);font-weight:500}.tlrow code{color:var(--strat-t)}
+
+/* severity pills */
+.sev{display:flex;flex-direction:column;gap:16px;margin-top:30px;}
+.srow{display:grid;grid-template-columns:230px 1fr;align-items:center;border:1.5px solid var(--line);border-radius:14px;background:var(--panel);overflow:hidden}
+.srow .badge{font-family:var(--font-display);font-weight:800;font-size:25px;padding:24px 28px;text-align:center;border-right:1.5px solid var(--line)}
+.srow .desc{padding:18px 30px;font-size:20px;line-height:1.45;color:var(--muted)}
+.srow .desc b{color:var(--text);font-weight:500}
+.s-must .badge{color:var(--danger-t);background:rgba(224,103,106,.1)}
+.s-should .badge{color:var(--exec-t);background:rgba(224,163,94,.1)}
+.s-info .badge{color:var(--bead-t);background:rgba(60,194,121,.1)}
+
+/* do / dont */
+.do,.dont{list-style:none;margin-top:10px;}
+.do li,.dont li{font-size:21px;line-height:1.5;margin:13px 0;color:var(--muted);padding-left:34px;position:relative;}
+.do li::before{content:"✓";position:absolute;left:0;color:var(--bead-t);font-weight:700;}
+.dont li::before{content:"✕";position:absolute;left:0;color:var(--danger-t);font-weight:700;}
+.do li b,.dont li b{color:var(--text);font-weight:500;}
+
+/* cheat */
+.cheat{margin-top:24px;border:1.5px solid var(--line);border-radius:14px;overflow:hidden}
+.crow{display:grid;grid-template-columns:1fr 1.5fr}
+.crow>div{padding:14px 28px;border-bottom:1px solid var(--line);font-size:20px}
+.crow:last-child>div{border-bottom:none}
+.chead>div{background:rgba(255,255,255,.05);font-size:15px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+.crow .act{color:var(--text)}.crow .act code{color:var(--bead-t)}
+
+/* closing */
+.closing{display:flex;flex-direction:column;justify-content:center;height:100%}
+.closing h2{font-size:84px}
+.closing .g{background:linear-gradient(100deg,var(--strat),var(--bead));-webkit-background-clip:text;background-clip:text;color:transparent}
+
+/* reveal */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.slide.visible .reveal{opacity:1;transform:none}
+.slide.visible .d1{transition-delay:.06s}.slide.visible .d2{transition-delay:.16s}.slide.visible .d3{transition-delay:.26s}.slide.visible .d4{transition-delay:.36s}.slide.visible .d5{transition-delay:.46s}.slide.visible .d6{transition-delay:.56s}
+
+/* deck chrome */
+.deck-controls{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:1000;display:flex;align-items:center;gap:16px;font-family:var(--font-mono);color:var(--muted);font-size:14px;letter-spacing:.12em;background:rgba(7,11,22,.7);border:1px solid var(--line);border-radius:999px;padding:8px 18px;backdrop-filter:blur(8px)}
+.deck-controls button,.deck-controls a{background:none;border:none;color:var(--text);font-size:18px;cursor:pointer;line-height:1;padding:2px 6px;text-decoration:none}
+.deck-controls button:hover,.deck-controls a:hover{color:var(--strat)}
+.deck-controls a#homeBtn{border-right:1px solid var(--line);padding-right:12px;margin-right:2px;font-size:19px}
+.progress{position:fixed;left:0;top:0;height:3px;background:linear-gradient(90deg,var(--strat),var(--bead));z-index:1001;transition:width .4s var(--ease)}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="deck-viewport"><main class="deck-stage" id="deckStage">
+
+  <!-- 1 TITLE -->
+  <section class="slide title active">
+    <div class="pad">
+      <div class="eyebrow reveal d1">AvantoDev · Team Resource · How to Use</div>
+      <h1 class="reveal d2">PR Review <span class="g">Agent</span></h1>
+      <p class="lead reveal d3">Your automated first reviewer. Tag it on a pull request and it reads the code against our specs and best practices, leaves a full review, and moves the ticket — <b>before</b> a human ever looks.</p>
+      <div class="chips">
+        <span class="chip reveal d4">Lives in <b>Slack</b></span>
+        <span class="chip reveal d4">Reviews on <b>GitHub</b></span>
+        <span class="chip reveal d5">Updates <b>Jira</b> + <b>Notion</b></span>
+        <span class="chip ok reveal d6">✓ runs in seconds</span>
+      </div>
+    </div>
+    <div class="foot">What it's for · how to call it · what you get back · the day-to-day</div>
+  </section>
+
+  <!-- 2 OBJECTIVE -->
+  <section class="slide">
+    <div class="pad">
+      <div class="eyebrow reveal d1">Why it exists</div>
+      <h2 class="reveal d2">The goal: a fast, consistent first pass</h2>
+      <p class="lead reveal d2">Every PR deserves a thorough review — but human reviewers are busy and inconsistent. The agent gives <b>every</b> PR the same rigorous first look <b>in seconds</b>, so humans spend their time on judgment, not catching the obvious.</p>
+      <div class="tl reveal d3">
+        <div class="tlrow"><span class="t">🎯 What</span><span>An autonomous reviewer that reads your diff against the <b>spec + our best-practice rules</b> and posts a real GitHub review.</span></div>
+        <div class="tlrow"><span class="t">⚡ Why</span><span>Consistency &amp; speed. It never gets tired, never skips the security checklist, never forgets the design-system rules.</span></div>
+        <div class="tlrow"><span class="t">🤝 Not a replacement</span><span>It's the <b>first</b> reviewer, not the last. A human still approves — the agent just clears the noise first.</span></div>
+      </div>
+      <div class="keynote reveal d4">Under the hood: a Python service on <b>AWS Bedrock</b> (Claude Sonnet 4.6), running a deterministic <b>LangGraph</b> pipeline so irreversible actions — merge, ticket transitions — always happen in a safe, fixed order.</div>
+    </div>
+    <div class="foot">The first reviewer on every PR — same rigor, every time</div>
+  </section>
+
+  <!-- 3 HOW TO INVOKE -->
+  <section class="slide">
+    <div class="pad">
+      <div class="eyebrow x-epic reveal d1">How you call it</div>
+      <h2 class="reveal d2">Tag it in Slack</h2>
+      <p class="lead reveal d2">There's one thing to remember: <b>mention the bot with a PR link</b>. That's it. Post it in the PR thread in <code>#strata-backend-pr</code> and the review starts.</p>
+      <div class="cmd reveal d3">
+        <span class="at">@PR Review Agent</span> <span class="cmd-k">review</span> <span class="arg">https://github.com/AvantoDev/avanto-db/pull/930</span><br>
+        <span class="cm"># or just paste a Jira key — it finds the PR:</span><br>
+        <span class="at">@PR Review Agent</span> <span class="cmd-k">review</span> <span class="arg">ST-223</span><br>
+        <span class="cm"># or a Slack thread URL · or several PRs at once</span>
+      </div>
+      <div class="keynote reveal d4">It accepts a <b>PR URL</b>, a <b>Jira key</b> (e.g. <code>ST-223</code>), a <b>Slack thread URL</b>, or <b>multiple PRs</b> in one message. No URL handy? It will try to resolve the PR from the ticket for you.</div>
+    </div>
+    <div class="foot">One move · @-mention the bot with a link · it does the rest</div>
+  </section>
+
+  <!-- 4 WHAT IT REVIEWS -->
+  <section class="slide">
+    <div class="pad">
+      <div class="eyebrow x-exec reveal d1">What it looks at</div>
+      <h2 class="reveal d2">Two layers of checks</h2>
+      <p class="lead reveal d2">Every PR gets the <b>base ruleset</b>. On top of that, the agent detects the repo and adds the <b>repo-specific</b> rules — so a frontend PR gets React &amp; design-system checks a backend PR never sees.</p>
+      <div class="grid2 reveal d3">
+        <div class="gcard gc-2">
+          <div class="h">① Base ruleset — every PR</div>
+          <div class="d"><b>Security / OWASP</b> · injection, authz, secrets<br><b>Error handling</b> · failures caught &amp; surfaced<br><b>Data integrity</b> · migrations, idempotency<br><b>Code quality</b> &amp; <b>testing</b> · coverage of new logic<br><b>Spec compliance</b> · does it match the PRD/spec?</div>
+        </div>
+        <div class="gcard gc-5">
+          <div class="h">② Repo-specific — auto-detected</div>
+          <div class="d"><code>front-react-strata-ui</code> · React correctness, design-system imports, frontend security, a11y, test integrity<br><code>avanto-db</code> · migration &amp; schema rules<br><code>graphql-gateway</code> · gateway contract rules</div>
+        </div>
+      </div>
+      <div class="keynote reveal d4">📋 <b>Specs first.</b> Drop a <code>*-spec.md</code> / <code>*-design.md</code> (or anything under <code>**/specs/**</code>) in the PR and the agent reviews against it. Want strict PRD enforcement instead? See the next slide.</div>
+    </div>
+    <div class="foot">Base checks for everyone · the right extra rules for each repo</div>
+  </section>
+
+  <!-- 5 DIRECTIVES -->
+  <section class="slide">
+    <div class="pad">
+      <div class="eyebrow reveal d1">Steering the review</div>
+      <h2 class="reveal d2">Directives — type them in the mention</h2>
+      <p class="lead reveal d2">Add a line to your Slack message to change what the bot does. Mix as many as you like, one per line.</p>
+      <div class="map reveal d3">
+        <div class="mrow mhead"><div>Directive</div><div>What it does</div><div>When to use it</div></div>
+        <div class="mrow"><div class="j"><code>ack: &lt;desc&gt;</code></div><div>Downgrades a matching finding to <b>Informational</b>, tagged <code>[ACK by reviewer]</code>.</div><div>"I know about this, it's handled separately" — without blocking the merge. Semantic <b>or</b> positional: <code>ack: issue 2</code>.</div></div>
+        <div class="mrow"><div class="j"><code>enforce prd</code></div><div>Turns on <b>strict PRD mode</b> (PRD bypass is the default).</div><div>When the PR must be checked against a formal PRD, not just a spec file.</div></div>
+        <div class="mrow"><div class="j"><code>bypass jira</code></div><div>Skips the Jira comment &amp; status transition.</div><div>Quick code-only check, no ticket to touch.</div></div>
+        <div class="mrow"><div class="j"><code>dont merge</code></div><div>Reviews &amp; approves but <b>never auto-merges</b>.</div><div>You want the green light but will merge it yourself.</div></div>
+      </div>
+      <div class="keynote reveal d4">Example: <code>ack: SQL injection in user.ts is fixed in ST-1234</code> on its own line → that finding drops to Informational and stops blocking the merge.</div>
+    </div>
+    <div class="foot">ack: · enforce prd · bypass jira · dont merge · mix freely, one per line</div>
+  </section>
+
+  <!-- 6 OUTPUTS -->
+  <section class="slide">
+    <div class="pad">
+      <div class="eyebrow x-bead reveal d1">What you get back</div>
+      <h2 class="reveal d2">Four places, automatically</h2>
+      <p class="lead reveal d2">One mention fans out into four updates — you don't lift a finger for any of them.</p>
+      <div class="map reveal d3">
+        <div class="mrow mhead"><div>Where</div><div>What lands there</div><div>So that…</div></div>
+        <div class="mrow"><div class="j j-git">GitHub</div><div>A full <b>review</b> — findings grouped by severity with <code>(N of total)</code> counts. Empty buckets omitted.</div><div>the findings live next to the code, inline.</div></div>
+        <div class="mrow"><div class="j j-jira">Jira</div><div>A <b>comment</b> + a <b>status transition</b> on the ticket.</div><div>the board reflects review state — no manual dragging.</div></div>
+        <div class="mrow"><div class="j j-notion">Notion</div><div>A row in the <b>PR Reviews Log</b>.</div><div>there's an audit trail of every review. (Non-fatal if it fails.)</div></div>
+        <div class="mrow"><div class="j j-slack">Slack</div><div>A thread reply with the <b>top 3 findings</b> + severity counts; a digest in <code>#strata-backend-pr-summary</code>.</div><div>you see the verdict where you asked, the team sees the rollup.</div></div>
+      </div>
+      <div class="keynote reveal d4">Every error is friendly and carries a <code>correlation_id</code> — DM it to your Tech Lead and they can trace exactly what happened. No raw stack traces in Slack.</div>
+    </div>
+    <div class="foot">GitHub · Jira · Notion · Slack — all updated from one mention</div>
+  </section>
+
+  <!-- 7 SEVERITY -->
+  <section class="slide">
+    <div class="pad">
+      <div class="eyebrow x-danger reveal d1">How to read the review</div>
+      <h2 class="reveal d2">Three severities</h2>
+      <p class="lead reveal d2">Findings are grouped so you know what to do at a glance. Only one of them blocks the merge.</p>
+      <div class="sev">
+        <div class="srow s-must reveal d3"><div class="badge">🔴 Must Fix</div><div class="desc"><b>Blocks the merge.</b> Security holes, data-integrity risks, spec violations. The agent will not auto-merge while any of these are open.</div></div>
+        <div class="srow s-should reveal d4"><div class="badge">🟡 Should Fix</div><div class="desc"><b>Strongly recommended, non-blocking.</b> Quality, missing tests, risky patterns. Fix now or file a follow-up — your call.</div></div>
+        <div class="srow s-info reveal d5"><div class="badge">🟢 Informational</div><div class="desc"><b>FYI.</b> Style notes, suggestions, and anything you <code>ack:</code>'d. Never blocks anything.</div></div>
+      </div>
+      <div class="keynote reveal d6">The Slack reply leads with <code>Findings: N (X Must Fix, Y Should Fix, Z Informational)</code> so you get the verdict before opening GitHub.</div>
+    </div>
+    <div class="foot">Only 🔴 Must Fix blocks the merge · 🟡 and 🟢 never do</div>
+  </section>
+
+  <!-- 8 AUTO-MERGE -->
+  <section class="slide">
+    <div class="pad">
+      <div class="eyebrow reveal d1">When it merges for you</div>
+      <h2 class="reveal d2">The auto-merge policy</h2>
+      <p class="lead reveal d2">The agent only merges when it's clearly safe. <b>All five</b> must hold — miss one and it approves but leaves the merge to you.</p>
+      <div class="tl reveal d3">
+        <div class="tlrow good"><span class="t">①</span><span>The review is an <b>approval</b> — the model is confident.</span></div>
+        <div class="tlrow good"><span class="t">②</span><span><b>Zero 🔴 Must Fix</b> findings open.</span></div>
+        <div class="tlrow good"><span class="t">③</span><span>The PR is <b>not a draft</b>.</span></div>
+        <div class="tlrow good"><span class="t">④</span><span>The base branch is <b>not protected</b> — <code>main</code>, <code>production</code>, <code>strata-production</code> are <b>never</b> auto-merged.</span></div>
+        <div class="tlrow good"><span class="t">⑤</span><span>You didn't say <code>dont merge</code>.</span></div>
+      </div>
+      <div class="keynote reveal d4">🔒 Protected branches always require a human merge — by design. If anything is unclear, the agent's default is to <b>approve but not merge</b>, never the other way around.</div>
+    </div>
+    <div class="foot">Five green lights or no auto-merge · protected branches always manual</div>
+  </section>
+
+  <!-- 9 EDGE CASES -->
+  <section class="slide">
+    <div class="pad">
+      <div class="eyebrow reveal d1">Good to know</div>
+      <h2 class="reveal d2">What it does in tricky cases</h2>
+      <div class="grid2">
+        <div class="gcard gc-2 reveal d2"><div class="h">Draft PR</div><div class="d">You mention it on a draft.</div><div class="fix">→ Full <b>COMMENT</b> review with all findings — but no auto-merge, no Jira transition. Mark Ready &amp; re-mention for the full flow.</div></div>
+        <div class="gcard gc-1 reveal d3"><div class="h">Merge conflicts</div><div class="d">The branch can't merge cleanly.</div><div class="fix">→ It reviews and tells you; resolve conflicts, then re-mention.</div></div>
+        <div class="gcard gc-5 reveal d4"><div class="h">Re-review</div><div class="d">You pushed fixes and tag it again.</div><div class="fix">→ It reconciles against its <b>previous</b> review, so <code>ack:</code>s and resolved items carry over.</div></div>
+        <div class="gcard gc-3 reveal d5"><div class="h">Something failed</div><div class="d">An API call broke mid-review.</div><div class="fix">→ Friendly message + <code>correlation_id</code>. Notion failures are non-fatal — the review still posts.</div></div>
+      </div>
+    </div>
+    <div class="foot">Drafts → comment-only · conflicts surfaced · re-reviews remember · errors are traceable</div>
+  </section>
+
+  <!-- 10 WALKTHROUGH -->
+  <section class="slide">
+    <div class="pad">
+      <div class="eyebrow x-bead reveal d1">Start to finish</div>
+      <h2 class="reveal d2">A review, end to end</h2>
+      <p class="lead reveal d2">Here's the whole loop for one PR — what you do, what the bot does, what you get.</p>
+      <div class="flow">
+        <div class="fnode you reveal d3"><div class="fn">You @-mention</div><div class="fl">PR link in #strata-backend-pr</div></div>
+        <div class="farrow reveal d3">→</div>
+        <div class="fnode bot reveal d3"><div class="fn">Bot reads</div><div class="fl">diff + spec + repo rules</div></div>
+        <div class="farrow reveal d4">→</div>
+        <div class="fnode bot reveal d4"><div class="fn">Bot reviews</div><div class="fl">🔴🟡🟢 on GitHub</div></div>
+        <div class="farrow reveal d4">→</div>
+        <div class="fnode out reveal d5"><div class="fn">Bot acts</div><div class="fl">Jira + Notion + Slack · auto-merge if clean</div></div>
+      </div>
+      <div class="keynote reveal d5">You read the Slack reply, fix any 🔴 Must Fix, push, and re-mention. When it's clean and the five conditions hold, it merges — otherwise a human gives the final approval. 🟢</div>
+    </div>
+    <div class="foot">Mention → read → review → act · you only step in for Must Fix</div>
+  </section>
+
+  <!-- 11 QUICK REFERENCE -->
+  <section class="slide">
+    <div class="pad">
+      <div class="eyebrow reveal d1">Quick reference card</div>
+      <h2 class="reveal d2">What do I type? — one line each</h2>
+      <div class="cheat reveal d2">
+        <div class="crow chead"><div>I want to…</div><div>Type this in Slack</div></div>
+        <div class="crow"><div>Review a PR</div><div class="act"><code>@PR Review Agent review &lt;PR URL&gt;</code></div></div>
+        <div class="crow"><div>Review by ticket</div><div class="act"><code>@PR Review Agent review ST-223</code></div></div>
+        <div class="crow"><div>Acknowledge a finding</div><div class="act"><code>ack: &lt;description&gt;</code> &nbsp;or&nbsp; <code>ack: issue 2</code> (own line)</div></div>
+        <div class="crow"><div>Force strict PRD check</div><div class="act"><code>enforce prd</code></div></div>
+        <div class="crow"><div>Skip the Jira update</div><div class="act"><code>bypass jira</code></div></div>
+        <div class="crow"><div>Review but don't merge</div><div class="act"><code>dont merge</code></div></div>
+        <div class="crow"><div>Re-review after fixes</div><div class="act">Push, then mention it again — it remembers the last review</div></div>
+      </div>
+    </div>
+    <div class="foot">Screenshot this slide — it's everything you can say to the bot</div>
+  </section>
+
+  <!-- 12 CLOSING -->
+  <section class="slide">
+    <div class="pad closing">
+      <div class="eyebrow reveal d1">The one thing to remember</div>
+      <h2 class="reveal d2">Tag it. Read the verdict.<br>Fix the <span class="g">🔴 Must Fix</span>. Ship.</h2>
+      <p class="lead reveal d3">The PR Review Agent is your tireless first reviewer — same checklist, every PR, in seconds. It clears the obvious so humans can focus on the judgment calls.</p>
+      <p class="lead reveal d4" style="margin-top:24px;color:var(--bead-t);">Mention it on your next PR in <code>#strata-backend-pr</code> and see for yourself. 🟢</p>
+    </div>
+    <div class="foot">PR Review Agent · Team Resource · Engineering Atlas</div>
+  </section>
+
+</main></div>
+
+<nav class="deck-controls" aria-label="Slide navigation">
+  <a href="./index.html" id="homeBtn" title="Back to Engineering Atlas" aria-label="Back to Engineering Atlas">⌂</a>
+  <button id="prevBtn" aria-label="Previous slide">‹</button>
+  <span id="counter">01 / 12</span>
+  <button id="nextBtn" aria-label="Next slide">›</button>
+</nav>
+
+<script>
+class SlidePresentation{
+  constructor(){this.slides=[...document.querySelectorAll('.slide')];this.current=0;
+    this.stage=document.getElementById('deckStage');this.counter=document.getElementById('counter');this.progress=document.getElementById('progress');
+    this.scale();addEventListener('resize',()=>this.scale());this.nav();this.show(0);}
+  scale(){const f=Math.min(innerWidth/1920,innerHeight/1080);this.stage.style.transform=`translate(${(innerWidth-1920*f)/2}px,${(innerHeight-1080*f)/2}px) scale(${f})`;}
+  nav(){document.getElementById('nextBtn').onclick=()=>this.show(this.current+1);document.getElementById('prevBtn').onclick=()=>this.show(this.current-1);
+    addEventListener('keydown',e=>{if(['ArrowRight','ArrowDown',' ','PageDown'].includes(e.key)){e.preventDefault();this.show(this.current+1);}else if(['ArrowLeft','ArrowUp','PageUp'].includes(e.key)){e.preventDefault();this.show(this.current-1);}else if(e.key==='Home')this.show(0);else if(e.key==='End')this.show(this.slides.length-1);});
+    let wl=false;addEventListener('wheel',e=>{if(wl)return;wl=true;setTimeout(()=>wl=false,650);if(e.deltaY>20)this.show(this.current+1);else if(e.deltaY<-20)this.show(this.current-1);},{passive:true});
+    let x0=null;addEventListener('touchstart',e=>x0=e.touches[0].clientX,{passive:true});addEventListener('touchend',e=>{if(x0===null)return;const dx=e.changedTouches[0].clientX-x0;if(Math.abs(dx)>50)this.show(this.current+(dx<0?1:-1));x0=null;},{passive:true});}
+  show(i){this.current=Math.max(0,Math.min(i,this.slides.length-1));this.slides.forEach((s,n)=>{s.classList.toggle('active',n===this.current);s.classList.toggle('visible',n===this.current);});
+    const p=n=>String(n).padStart(2,'0');this.counter.textContent=`${p(this.current+1)} / ${p(this.slides.length)}`;this.progress.style.width=((this.current+1)/this.slides.length*100)+'%';}
+}
+new SlidePresentation();
+</script>
+</body>
+</html>
